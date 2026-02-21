@@ -1,0 +1,2 @@
+# SPA fallback for client-side routing
+/result/*  /result.html  200
