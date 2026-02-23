@@ -8,51 +8,124 @@ const fadeUp = { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } }
 
 export default function Hero() {
   const { t } = useLocale();
-  const stats = [
-    { value: t("hero.stat1_value"), label: t("hero.stat1_label") },
-    { value: t("hero.stat2_value"), label: t("hero.stat2_label") },
-    { value: t("hero.stat3_value"), label: t("hero.stat3_label") },
-    { value: t("hero.stat4_value"), label: t("hero.stat4_label") },
-  ];
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-16 lg:pt-36 lg:pb-24">
+    <section className="relative overflow-hidden pt-28 pb-12 lg:pt-36 lg:pb-20">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-primary/10 blur-[120px]" />
-        <div className="absolute top-40 right-0 h-[400px] w-[400px] rounded-full bg-accent/8 blur-[100px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-violet-500/8 blur-[150px]" />
+        <div className="absolute top-40 right-0 h-[300px] w-[300px] rounded-full bg-blue-500/6 blur-[120px]" />
       </div>
+
       <div className="relative mx-auto max-w-7xl px-6">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* Left: Text */}
           <div>
-            <motion.div {...fadeUp} transition={{ duration: 0.5 }} className="mb-6">
-              <span className="inline-block rounded-full bg-primary/15 px-4 py-1.5 text-sm font-medium text-primary border border-primary/20">{t("hero.badge")}</span>
+            <motion.div {...fadeUp} transition={{ duration: 0.5 }}>
+              <span className="inline-block rounded-full bg-gradient-to-r from-violet-500/15 to-blue-500/15 px-4 py-1.5 text-sm font-semibold text-violet-400 border border-violet-500/20">
+                {t("hero.badge")}
+              </span>
             </motion.div>
-            <motion.h1 {...fadeUp} transition={{ duration: 0.5, delay: 0.1 }} className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-              {t("hero.title1")}<br />
-              <span className="bg-gradient-to-r from-[#00D2A0] to-[#00B884] bg-clip-text text-transparent">{t("hero.title2")}</span>
+
+            <motion.h1
+              {...fadeUp}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mt-6 text-4xl font-bold leading-tight tracking-tight text-zinc-100 md:text-5xl lg:text-6xl"
+            >
+              {t("hero.title1")}
+              <br />
+              <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+                {t("hero.title2")}
+              </span>
             </motion.h1>
-            <motion.p {...fadeUp} transition={{ duration: 0.5, delay: 0.2 }} className="mt-5 max-w-lg text-base leading-relaxed text-gray-400 sm:text-lg">
-              {t("hero.subtitle").split("\n").map((line, i) => (<span key={i}>{line}{i === 0 && <br className="hidden sm:block" />}</span>))}
+
+            <motion.p
+              {...fadeUp}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-6 max-w-lg text-base leading-relaxed text-zinc-400 md:text-lg"
+            >
+              {t("hero.subtitle").split("\n").map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i === 0 && <br />}
+                </span>
+              ))}
             </motion.p>
-            <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.3 }} className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/diagnose" className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-purple-500/25 transition-all duration-200 hover:from-purple-500 hover:to-purple-400 hover:scale-105 active:scale-95">
+
+            <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.3 }} className="mt-8">
+              <Link
+                href="/diagnose"
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet-500/20 transition-all duration-200 hover:from-violet-500 hover:to-blue-500 hover:scale-105 active:scale-95"
+              >
                 {t("hero.cta_primary")}
               </Link>
-              <a href="#features" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-8 py-4 text-sm font-semibold text-gray-300 transition-all duration-200 hover:bg-white/5 hover:text-white">
-                {t("hero.cta_secondary")}
-              </a>
-            </motion.div>
-            <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.4 }} className="mt-12 grid grid-cols-4 gap-4">
-              {stats.map((stat, i) => (
-                <div key={i} className="text-center sm:text-left">
-                  <div className="text-xl font-bold text-white sm:text-2xl">{stat.value}</div>
-                  <div className="mt-0.5 text-xs text-gray-500">{stat.label}</div>
-                </div>
-              ))}
+              <p className="mt-4 text-sm text-zinc-500">{t("hero.trust")}</p>
             </motion.div>
           </div>
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.3 }} className="flex justify-center lg:justify-end">
-            <PhoneMockup />
+
+          {/* Right: Product Preview Cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="relative flex justify-center lg:justify-end"
+          >
+            <div className="relative w-full max-w-[420px] h-[380px] sm:h-[420px]">
+              {/* Card 3 (back) - Cost */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-0 right-0 w-[240px] sm:w-[260px] rotate-2 z-10"
+              >
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-5 shadow-2xl backdrop-blur-sm">
+                  <p className="text-sm font-semibold text-zinc-300">{t("hero.card3_title")}</p>
+                  <p className="mt-3 text-lg font-bold text-zinc-100">{t("hero.card3_total")}</p>
+                  <div className="mt-4 space-y-2.5">
+                    <BarItem label={t("hero.card3_bar1")} width="70%" color="from-violet-500 to-violet-400" />
+                    <BarItem label={t("hero.card3_bar2")} width="50%" color="from-blue-500 to-blue-400" />
+                    <BarItem label={t("hero.card3_bar3")} width="30%" color="from-cyan-500 to-cyan-400" />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Card 2 (middle) - Commercial Analysis */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute top-16 right-12 sm:right-16 w-[240px] sm:w-[260px] rotate-1 z-20"
+              >
+                <div className="rounded-2xl border border-zinc-800 bg-zinc-900/80 p-5 shadow-2xl backdrop-blur-sm">
+                  <p className="text-sm font-semibold text-zinc-300">{t("hero.card2_title")}</p>
+                  <div className="mt-3 rounded-xl bg-zinc-800/50 p-3 border border-zinc-700/50">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-red-400" />
+                      <div className="h-2 w-2 rounded-full bg-blue-400" />
+                      <div className="h-2 w-2 rounded-full bg-green-400" />
+                      <span className="ml-auto text-[10px] text-zinc-500">Map</span>
+                    </div>
+                    <div className="mt-2 h-12 rounded-lg bg-zinc-700/30 flex items-center justify-center">
+                      <span className="text-xs text-zinc-500">📍 🗺️</span>
+                    </div>
+                  </div>
+                  <p className="mt-3 text-xs text-zinc-400">{t("hero.card2_desc")}</p>
+                </div>
+              </motion.div>
+
+              {/* Card 1 (front, largest) - Checklist */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute top-32 left-0 w-[270px] sm:w-[300px] z-30"
+              >
+                <div className="rounded-2xl border border-zinc-700 bg-zinc-900/90 p-5 shadow-2xl backdrop-blur-sm">
+                  <p className="text-sm font-semibold text-zinc-200">{t("hero.card1_title")}</p>
+                  <div className="mt-4 space-y-2.5">
+                    <p className="text-xs text-emerald-400">{t("hero.card1_item1")}</p>
+                    <p className="text-xs text-zinc-500">{t("hero.card1_item2")}</p>
+                    <p className="text-xs text-zinc-500">{t("hero.card1_item3")}</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -60,43 +133,15 @@ export default function Hero() {
   );
 }
 
-function PhoneMockup() {
-  const { t } = useLocale();
-  const chatMessages = [
-    { type: "ai" as const, text: t("hero.phone_ai1") },
-    { type: "chips" as const, items: [t("hero.phone_chip1"), t("hero.phone_chip2"), t("hero.phone_chip3")] },
-    { type: "user" as const, text: t("hero.phone_user") },
-    { type: "ai" as const, text: t("hero.phone_ai2") },
-  ];
-
+function BarItem({ label, width, color }: { label: string; width: string; color: string }) {
   return (
-    <motion.div animate={{ y: [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="relative">
-      <div className="absolute inset-0 rounded-[3rem] bg-gradient-to-br from-primary/20 to-accent/20 blur-2xl scale-95" />
-      <div className="relative w-[280px] rounded-[2.5rem] border border-white/10 bg-[#111118] p-2 shadow-2xl sm:w-[300px]">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-6 w-28 rounded-b-2xl bg-[#111118] z-10" />
-        <div className="rounded-[2rem] bg-[#0A0A0F] px-4 pb-5 pt-8 min-h-[480px] flex flex-col">
-          <div className="mb-4 flex items-center gap-2">
-            <span className="text-lg">🚀</span>
-            <span className="text-sm font-bold text-white">{t("hero.phone_title")}</span>
-            <span className="ml-auto flex items-center gap-1 text-xs text-accent">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />{t("hero.phone_status")}
-            </span>
-          </div>
-          <div className="flex flex-1 flex-col gap-3">
-            {chatMessages.map((msg, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 + i * 0.4, duration: 0.4 }}>
-                {msg.type === "ai" && <div className="max-w-[85%] rounded-2xl rounded-tl-md bg-[#1A1A2E] px-3.5 py-2.5 text-xs leading-relaxed text-gray-200">{msg.text}</div>}
-                {msg.type === "user" && <div className="ml-auto max-w-[75%] rounded-2xl rounded-tr-md bg-gradient-to-r from-purple-600 to-purple-500 px-3.5 py-2.5 text-xs leading-relaxed text-white">{msg.text}</div>}
-                {msg.type === "chips" && <div className="flex flex-wrap gap-1.5">{msg.items!.map((chip, j) => (<span key={j} className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] text-gray-300">{chip}</span>))}</div>}
-              </motion.div>
-            ))}
-          </div>
-          <div className="mt-3 flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-2">
-            <span className="text-xs text-gray-500 flex-1">{t("hero.phone_placeholder")}</span>
-            <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center"><span className="text-[10px] text-white">↑</span></div>
-          </div>
-        </div>
+    <div>
+      <div className="flex justify-between text-xs mb-1">
+        <span className="text-zinc-500">{label}</span>
       </div>
-    </motion.div>
+      <div className="h-2 rounded-full bg-zinc-800">
+        <div className={`h-full rounded-full bg-gradient-to-r ${color}`} style={{ width }} />
+      </div>
+    </div>
   );
 }

@@ -1,25 +1,29 @@
 import Hero from "@/components/landing/Hero";
-import Ticker from "@/components/landing/Ticker";
+import FeatureStrip from "@/components/landing/Ticker";
 import Problem from "@/components/landing/Problem";
 import Solution from "@/components/landing/Solution";
+import HowItWorks from "@/components/landing/HowItWorks";
+import Founder from "@/components/landing/Founder";
 import Features from "@/components/landing/Features";
-import Reviews from "@/components/landing/Reviews";
+import TargetUsers from "@/components/landing/Reviews";
 import Pricing from "@/components/landing/Pricing";
-import CTA from "@/components/landing/CTA";
 import FAQ from "@/components/landing/FAQ";
+import CTA from "@/components/landing/CTA";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Ticker />
+      <FeatureStrip />
       <Problem />
       <Solution />
+      <HowItWorks />
+      <Founder />
       <Features />
-      <Reviews />
+      <TargetUsers />
       <Pricing />
-      <CTA />
       <FAQ />
+      <CTA />
     </>
   );
 }

@@ -21,13 +21,13 @@ const inter = Inter({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#6C5CE7",
+  themeColor: "#8B5CF6",
 };
 
 export const metadata: Metadata = {
-  title: "StartupMate - AI 창업 비서 | 3분 만에 맞춤 창업 로드맵",
+  title: "창업메이트 - 창업 올인원 플랫폼 | 사업자등록, 상권분석, AI 로드맵",
   description:
-    "사업자등록부터 세금, 정부 지원금, 해외 진출까지. AI가 맞춤 창업 로드맵을 만들어드립니다.",
+    "검색은 그만. 사업자등록 가이드, 상권분석 지도, AI 맞춤 로드맵까지. 창업의 A to Z를 여기서 끝내세요.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`${notoSansKR.variable} ${inter.variable} font-sans bg-[#0A0A0F] text-white antialiased`}
+        className={`${notoSansKR.variable} ${inter.variable} font-sans bg-[#09090B] text-zinc-100 antialiased`}
       >
         <LocaleProvider>
           <Navbar />

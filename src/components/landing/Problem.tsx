@@ -1,42 +1,74 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Square } from "lucide-react";
 import { useLocale } from "@/hooks/useLocale";
 
-const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-50px" } };
+const fadeUp = {
+  initial: { opacity: 0, y: 30 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-50px" },
+};
 
 export default function Problem() {
   const { t, tArray } = useLocale();
-  const cards = tArray("problem.cards") as { emoji: string; title: string; desc: string }[];
+  const checklist = tArray("problem.checklist") as string[];
+  const stats = tArray("problem.stats") as { value: string; label: string }[];
 
   return (
-    <section className="relative py-20 lg:py-28">
+    <section className="relative py-24 md:py-32 bg-zinc-950/30">
       <div className="mx-auto max-w-7xl px-6">
-        <motion.div {...fadeUp} transition={{ duration: 0.5 }}>
-          <span className="text-sm font-semibold uppercase tracking-wider text-purple-400">{t("problem.label")}</span>
-        </motion.div>
-        <motion.h2 {...fadeUp} transition={{ duration: 0.5, delay: 0.1 }} className="mt-4 max-w-2xl text-3xl font-bold leading-snug md:text-4xl lg:text-5xl">
-          {t("problem.title1")}<br /><span className="text-gray-400">{t("problem.title2")}</span>
+        <motion.h2
+          {...fadeUp}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-bold text-zinc-100 md:text-5xl lg:text-6xl"
+        >
+          {t("problem.title")}
         </motion.h2>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((card, i) => (
-            <motion.div key={i} {...fadeUp} transition={{ duration: 0.5, delay: 0.15 * i }} whileHover={{ y: -6 }} className="group rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 md:p-8 transition-all duration-300 hover:border-purple-500/30">
-              <span className="text-4xl">{card.emoji}</span>
-              <h3 className="mt-4 text-lg font-semibold">{card.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-400">{card.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-        <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.3 }} className="mt-12">
-          <div className="rounded-2xl border border-transparent bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 p-[1px]">
-            <div className="rounded-2xl bg-[#0A0A0F] px-6 py-5 sm:px-8 sm:py-6">
-              <p className="text-center text-sm sm:text-base">
-                <span className="font-semibold text-white">{t("problem.bottom_label")}</span>{" "}
-                <span className="text-gray-400">{t("problem.bottom")}</span>
-              </p>
+        <motion.p
+          {...fadeUp}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mt-4 text-base text-zinc-400 md:text-lg"
+        >
+          {t("problem.subtitle")}
+        </motion.p>
+
+        <div className="mt-14 grid gap-8 lg:grid-cols-5">
+          {/* Left: Checklist (3/5) */}
+          <motion.div
+            {...fadeUp}
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="lg:col-span-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 md:p-9"
+          >
+            <h3 className="text-xl font-bold text-zinc-100">{t("problem.checklist_title")}</h3>
+            <div className="mt-6 space-y-4">
+              {checklist.map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <Square size={16} className="mt-0.5 shrink-0 text-zinc-600" />
+                  <span className="text-base text-zinc-300">{item}</span>
+                </div>
+              ))}
             </div>
+            <p className="mt-8 text-sm text-violet-400 font-medium">
+              {t("problem.checklist_bottom")}
+            </p>
+          </motion.div>
+
+          {/* Right: Stat cards (2/5) */}
+          <div className="lg:col-span-2 flex flex-col gap-4">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={i}
+                {...fadeUp}
+                transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
+                className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6"
+              >
+                <div className="text-3xl font-bold text-zinc-100">{stat.value}</div>
+                <p className="mt-2 text-sm text-zinc-500">{stat.label}</p>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
