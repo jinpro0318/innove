@@ -105,6 +105,8 @@ export default function Solution() {
               </>
             );
 
+            const linkMap: Record<number, string> = { 0: "/register-guide", 1: "/location", 2: "/diagnose" };
+
             return (
               <motion.div
                 key={i}
@@ -113,8 +115,8 @@ export default function Solution() {
                 whileHover={{ y: -4 }}
                 className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
               >
-                {i === 0 ? (
-                  <Link href="/register-guide" className="block">{content}</Link>
+                {linkMap[i] ? (
+                  <Link href={linkMap[i]} className="block">{content}</Link>
                 ) : (
                   content
                 )}

@@ -25,9 +25,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "창업메이트 - 창업 올인원 플랫폼 | 사업자등록, 상권분석, AI 로드맵",
+  title: {
+    default: "StartupMate - 창업 올인원 플랫폼 | 사업자등록, 상권분석, AI 로드맵",
+    template: "%s | StartupMate",
+  },
   description:
-    "검색은 그만. 사업자등록 가이드, 상권분석 지도, AI 맞춤 로드맵까지. 창업의 A to Z를 여기서 끝내세요.",
+    "사업자등록, 상권분석, AI 로드맵까지. 창업의 모든 것을 여기서 끝내세요. Business registration, market analysis, and AI roadmaps — all in one place.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

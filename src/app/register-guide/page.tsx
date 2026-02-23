@@ -308,6 +308,9 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
 
           {/* Bottom CTAs */}
           <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }} className="mt-12 space-y-3">
+            <Link href={answers.category ? `/location?industry=${answers.category}` : "/location"} className="flex items-center justify-center gap-2 rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4 text-sm text-violet-300 transition-colors duration-200 hover:bg-violet-500/10 hover:text-violet-200">
+              {t("register_guide.result_cta_location")}
+            </Link>
             <Link href="/diagnose" className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 p-4 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:from-violet-500 hover:to-blue-500">
               {t("register_guide.result_cta_diagnose")}
             </Link>
@@ -413,7 +416,7 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
                     transition={{ duration: 0.4, delay: 0.2 }}
                     className="mt-3 ml-10"
                   >
-                    <LocationInfo t={t} />
+                    <LocationInfo t={t} selectedCategory={answers.category} />
                   </motion.div>
                 )}
               </div>
@@ -471,8 +474,9 @@ function TaxComparison({ t }: { t: (key: string) => string }) {
 }
 
 // --- Location Info Widget ---
-function LocationInfo({ t }: { t: (key: string) => string }) {
+function LocationInfo({ t, selectedCategory }: { t: (key: string) => string; selectedCategory?: string }) {
   const types = ["home", "virtual", "office"] as const;
+  const locationHref = selectedCategory ? `/location?industry=${selectedCategory}` : "/location";
   return (
     <div className="space-y-3">
       {types.map((type) => (
@@ -492,6 +496,11 @@ function LocationInfo({ t }: { t: (key: string) => string }) {
               <span>{t(`register_guide.${type}.suitable`)}</span>
             </div>
           </div>
+          {(type === "virtual" || type === "office") && (
+            <Link href={locationHref} className="mt-3 inline-block text-xs text-violet-400 hover:text-violet-300 transition-colors">
+              {t(`register_guide.${type}.cta`)}
+            </Link>
+          )}
         </div>
       ))}
     </div>

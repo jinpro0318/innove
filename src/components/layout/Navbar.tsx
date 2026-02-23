@@ -2,21 +2,29 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Globe } from "lucide-react";
 import { useLocale } from "@/hooks/useLocale";
 
 export default function Navbar() {
   const { locale, toggleLocale, t } = useLocale();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const navLinks = [
+    { label: t("nav.diagnose"), href: "/diagnose" },
     { label: t("nav.register"), href: "/register-guide" },
-    { label: t("nav.features"), href: "/#features" },
+    { label: t("nav.location"), href: "/location" },
     { label: t("nav.pricing"), href: "/pricing" },
-    { label: t("nav.faq"), href: "/#faq" },
+    { label: t("nav.contact"), href: "/contact" },
   ];
+
+  function isActive(href: string) {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  }
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -50,10 +58,16 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-zinc-400 transition-colors duration-200 hover:text-zinc-100 relative group"
+              className={`text-sm transition-colors duration-200 relative group ${
+                isActive(link.href)
+                  ? "text-violet-400 font-medium"
+                  : "text-zinc-400 hover:text-zinc-100"
+              }`}
             >
               {link.label}
-              <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-violet-500 transition-all duration-200 group-hover:w-full" />
+              <span className={`absolute -bottom-1 left-0 h-0.5 bg-violet-500 transition-all duration-200 ${
+                isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
+              }`} />
             </Link>
           ))}
 
@@ -94,20 +108,28 @@ export default function Navbar() {
             <div className="flex flex-col gap-1 px-6 py-4">
               {navLinks.map((link, i) => (
                 <motion.div key={link.href} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
-                  <Link href={link.href} onClick={() => setIsMobileOpen(false)} className="block rounded-xl px-4 py-3 text-zinc-400 transition-colors duration-200 hover:bg-zinc-900 hover:text-zinc-100">
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsMobileOpen(false)}
+                    className={`block rounded-xl px-4 py-3 transition-colors duration-200 hover:bg-zinc-900 ${
+                      isActive(link.href)
+                        ? "text-violet-400 bg-violet-500/5"
+                        : "text-zinc-400 hover:text-zinc-100"
+                    }`}
+                  >
                     {link.label}
                   </Link>
                 </motion.div>
               ))}
 
-              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} className="mt-2">
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="mt-2">
                 <button onClick={toggleLocale} className="flex items-center gap-1.5 rounded-full border border-zinc-800 px-3 py-1.5 text-xs text-zinc-400">
                   <Globe size={14} />
                   {locale === "ko" ? "🇰🇷 KR" : "🇺🇸 EN"}
                 </button>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-3">
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-3">
                 <Link href="/diagnose" onClick={() => setIsMobileOpen(false)} className="block rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 px-5 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-violet-500/20">
                   {t("nav.cta")}
                 </Link>

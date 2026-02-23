@@ -161,17 +161,33 @@ function ResultContent() {
           </button>
         </motion.section>
 
+        {/* Next Steps */}
+        <motion.section {...fadeUp} transition={{ duration: 0.5, delay: 0.6 }} className="mt-12">
+          <h2 className="text-lg font-bold mb-5">{t("result.next_steps_title")}</h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Link href="/register-guide" className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-violet-500/30 hover:-translate-y-1">
+              <span className="text-2xl">🧭</span>
+              <h3 className="mt-3 text-sm font-bold text-zinc-100">{t("result.next_steps_register")}</h3>
+              <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{t("result.next_steps_register_desc")}</p>
+            </Link>
+            <Link href="/location" className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-violet-500/30 hover:-translate-y-1">
+              <span className="text-2xl">🗺️</span>
+              <h3 className="mt-3 text-sm font-bold text-zinc-100">{t("result.next_steps_location")}</h3>
+              <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{t("result.next_steps_location_desc")}</p>
+            </Link>
+            <Link href="/diagnose" className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-violet-500/30 hover:-translate-y-1">
+              <span className="text-2xl">🔄</span>
+              <h3 className="mt-3 text-sm font-bold text-zinc-100">{t("result.next_steps_retry")}</h3>
+              <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{t("result.next_steps_retry_desc")}</p>
+            </Link>
+          </div>
+        </motion.section>
+
         {/* Bottom CTAs */}
-        <motion.section {...fadeUp} transition={{ duration: 0.5, delay: 0.6 }} className="mt-12 space-y-4">
-          <Link href="/pricing" className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-primary/5 p-5 transition-colors duration-200 hover:bg-primary/10">
-            <Crown size={20} className="text-primary shrink-0" />
-            <div className="flex-1 min-w-0"><p className="text-sm font-semibold">{t("result.upgrade_title")}</p><p className="text-xs text-gray-400 mt-0.5">{t("result.upgrade_desc")}</p></div>
-          </Link>
-          <Link href="/register-guide" className="flex items-center justify-center gap-2 rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4 text-sm text-violet-300 transition-colors duration-200 hover:bg-violet-500/10 hover:text-violet-200">
-            🧭 {locale === "en" ? "Business Registration Guide" : "사업자등록 가이드"}
-          </Link>
-          <Link href="/diagnose" className="flex items-center justify-center gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 text-sm text-gray-300 transition-colors duration-200 hover:bg-white/5 hover:text-white">
-            <RefreshCw size={16} />{t("result.new_diagnosis")}
+        <motion.section {...fadeUp} transition={{ duration: 0.5, delay: 0.7 }} className="mt-8 space-y-4">
+          <Link href="/pricing" className="flex items-center gap-3 rounded-2xl border border-violet-500/20 bg-violet-500/5 p-5 transition-colors duration-200 hover:bg-violet-500/10">
+            <Crown size={20} className="text-violet-400 shrink-0" />
+            <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-zinc-100">{t("result.upgrade_title")}</p><p className="text-xs text-zinc-400 mt-0.5">{t("result.upgrade_desc")}</p></div>
           </Link>
         </motion.section>
       </div>
