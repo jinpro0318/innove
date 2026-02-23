@@ -12,6 +12,7 @@ export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const navLinks = [
+    { label: t("nav.register"), href: "/register-guide" },
     { label: t("nav.features"), href: "/#features" },
     { label: t("nav.pricing"), href: "/pricing" },
     { label: t("nav.faq"), href: "/#faq" },

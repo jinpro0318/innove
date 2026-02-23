@@ -167,6 +167,9 @@ function ResultContent() {
             <Crown size={20} className="text-primary shrink-0" />
             <div className="flex-1 min-w-0"><p className="text-sm font-semibold">{t("result.upgrade_title")}</p><p className="text-xs text-gray-400 mt-0.5">{t("result.upgrade_desc")}</p></div>
           </Link>
+          <Link href="/register-guide" className="flex items-center justify-center gap-2 rounded-2xl border border-violet-500/20 bg-violet-500/5 p-4 text-sm text-violet-300 transition-colors duration-200 hover:bg-violet-500/10 hover:text-violet-200">
+            🧭 {locale === "en" ? "Business Registration Guide" : "사업자등록 가이드"}
+          </Link>
           <Link href="/diagnose" className="flex items-center justify-center gap-2 rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4 text-sm text-gray-300 transition-colors duration-200 hover:bg-white/5 hover:text-white">
             <RefreshCw size={16} />{t("result.new_diagnosis")}
           </Link>
