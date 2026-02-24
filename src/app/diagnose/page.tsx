@@ -14,7 +14,7 @@ import { industries } from "@/data/industries";
 import { questions } from "@/data/questions";
 import { generateRoadmap } from "@/lib/gemini";
 import type { DiagnosisInput } from "@/lib/types";
-import { shouldShowPaywall, incrementDiagnosisCount } from "@/lib/plan";
+import { incrementDiagnosisCount } from "@/lib/plan";
 import { useLocale } from "@/hooks/useLocale";
 
 interface ChatEntry { role: "ai" | "user"; text: string; }
@@ -37,9 +37,7 @@ export default function DiagnosePage() {
   const [loadingPct, setLoadingPct] = useState(0);
   const [tipIndex, setTipIndex] = useState(0);
   const [loadingError, setLoadingError] = useState<string | null>(null);
-  const [showPaywall, setShowPaywall] = useState(false);
 
-  useEffect(() => { if (shouldShowPaywall()) setShowPaywall(true); }, []);
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [chatHistory, isTyping, showOptions]);
   useEffect(() => { pushAI(t("diagnose.welcome")); /* eslint-disable-next-line react-hooks/exhaustive-deps */ }, []);
 
@@ -109,23 +107,6 @@ export default function DiagnosePage() {
     if (currentStep === 1) return { options: industries.map((ind) => ({ value: ind.id, label: isEn ? ind.label_en : ind.label_ko, icon: ind.icon })), layout: "grid-2" };
     const q = questions[currentStep - 2];
     return { options: q.options.map((o) => ({ value: o.value, label: isEn ? o.label_en : o.label_ko, icon: o.icon })), layout: "buttons" };
-  }
-
-  // --- paywall ---
-  if (showPaywall) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md">
-          <span className="text-5xl mb-4 block">🔒</span>
-          <h2 className="text-2xl font-bold">{t("diagnose.paywall_title")}</h2>
-          <p className="mt-3 text-gray-400">{t("diagnose.paywall_desc")}</p>
-          <div className="mt-8 flex flex-col gap-3">
-            <Link href="/pricing" className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/25">{t("diagnose.paywall_cta")}</Link>
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-300 transition-colors duration-200">{t("diagnose.paywall_home")}</Link>
-          </div>
-        </motion.div>
-      </div>
-    );
   }
 
   // --- loading ---

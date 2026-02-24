@@ -14,11 +14,11 @@ export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const navLinks = [
-    { label: t("nav.diagnose"), href: "/diagnose" },
-    { label: t("nav.register"), href: "/register-guide" },
-    { label: t("nav.location"), href: "/location" },
-    { label: t("nav.pricing"), href: "/pricing" },
-    { label: t("nav.contact"), href: "/contact" },
+    { label: t("nav.diagnose"), href: "/diagnose", pro: false },
+    { label: t("nav.register"), href: "/register-guide", pro: false },
+    { label: t("nav.location"), href: "/location", pro: true },
+    { label: t("nav.pricing"), href: "/pricing", pro: false },
+    { label: t("nav.contact"), href: "/contact", pro: false },
   ];
 
   function isActive(href: string) {
@@ -58,13 +58,18 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm transition-colors duration-200 relative group ${
+              className={`text-sm transition-colors duration-200 relative group flex items-center gap-1.5 ${
                 isActive(link.href)
                   ? "text-violet-400 font-medium"
                   : "text-zinc-400 hover:text-zinc-100"
               }`}
             >
               {link.label}
+              {link.pro && (
+                <span className="rounded bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-bold text-violet-400 leading-none">
+                  PRO
+                </span>
+              )}
               <span className={`absolute -bottom-1 left-0 h-0.5 bg-violet-500 transition-all duration-200 ${
                 isActive(link.href) ? "w-full" : "w-0 group-hover:w-full"
               }`} />
@@ -111,13 +116,18 @@ export default function Navbar() {
                   <Link
                     href={link.href}
                     onClick={() => setIsMobileOpen(false)}
-                    className={`block rounded-xl px-4 py-3 transition-colors duration-200 hover:bg-zinc-900 ${
+                    className={`flex items-center gap-2 rounded-xl px-4 py-3 transition-colors duration-200 hover:bg-zinc-900 ${
                       isActive(link.href)
                         ? "text-violet-400 bg-violet-500/5"
                         : "text-zinc-400 hover:text-zinc-100"
                     }`}
                   >
                     {link.label}
+                    {link.pro && (
+                      <span className="rounded bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-bold text-violet-400 leading-none">
+                        PRO
+                      </span>
+                    )}
                   </Link>
                 </motion.div>
               ))}

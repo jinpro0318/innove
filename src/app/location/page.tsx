@@ -14,6 +14,7 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { useLocale } from "@/hooks/useLocale";
+import { canAccessFeature } from "@/lib/plan";
 import { industries } from "@/data/industries";
 import {
   searchNearby,
@@ -45,6 +46,11 @@ function LocationContent() {
   const { locale, t } = useLocale();
   const isEn = locale === "en";
   const searchParams = useSearchParams();
+  const [hasAccess, setHasAccess] = useState(false);
+
+  useEffect(() => {
+    setHasAccess(canAccessFeature("location"));
+  }, []);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ?? "",
@@ -245,6 +251,10 @@ function LocationContent() {
     () => [...places].sort((a, b) => b.rating - a.rating).slice(0, 5),
     [places]
   );
+
+  if (!hasAccess) {
+    return <PremiumGate t={t} />;
+  }
 
   if (!isLoaded) {
     return (
@@ -740,6 +750,75 @@ function AnalysisPanel({
           </Link>
         </div>
       </motion.div>
+    </div>
+  );
+}
+
+/* ── Premium Gate ── */
+function PremiumGate({ t }: { t: (key: string) => string }) {
+  return (
+    <div className="min-h-screen bg-[#0A0A0F] pt-20">
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <span className="text-6xl mb-6 block">🔒</span>
+          <h2 className="text-2xl font-bold text-zinc-100 sm:text-3xl">
+            {t("location.premium_title")}
+          </h2>
+          <p className="mt-4 text-zinc-400 whitespace-pre-line leading-relaxed">
+            {t("location.premium_desc")}
+          </p>
+
+          {/* Value cards */}
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            {[
+              { icon: "🏪", titleKey: "location.premium_card1_title", descKey: "location.premium_card1_desc" },
+              { icon: "💰", titleKey: "location.premium_card2_title", descKey: "location.premium_card2_desc" },
+              { icon: "🤖", titleKey: "location.premium_card3_title", descKey: "location.premium_card3_desc" },
+            ].map((card) => (
+              <div
+                key={card.titleKey}
+                className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 text-center"
+              >
+                <span className="text-2xl">{card.icon}</span>
+                <h3 className="mt-2 text-sm font-bold text-zinc-100">
+                  {t(card.titleKey)}
+                </h3>
+                <p className="mt-1 text-xs text-zinc-400">
+                  {t(card.descKey)}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Blurred map preview */}
+          <div className="relative mt-10 overflow-hidden rounded-2xl border border-zinc-800">
+            <div className="h-64 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 blur-sm" />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+              <MapPin size={48} className="text-violet-400/50" />
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="mt-8 flex flex-col items-center gap-3">
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-500/25 transition-all duration-200 hover:from-violet-500 hover:to-blue-500"
+            >
+              {t("location.premium_cta")}
+            </Link>
+            <Link
+              href="/diagnose"
+              className="text-sm text-zinc-500 transition-colors duration-200 hover:text-zinc-300"
+            >
+              {t("location.premium_free_alt")}
+            </Link>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

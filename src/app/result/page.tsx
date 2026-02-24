@@ -171,7 +171,10 @@ function ResultContent() {
               <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{t("result.next_steps_register_desc")}</p>
             </Link>
             <Link href="/location" className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-violet-500/30 hover:-translate-y-1">
-              <span className="text-2xl">🗺️</span>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🗺️</span>
+                <span className="rounded bg-violet-500/20 px-1.5 py-0.5 text-[10px] font-bold text-violet-400 leading-none">PRO</span>
+              </div>
               <h3 className="mt-3 text-sm font-bold text-zinc-100">{t("result.next_steps_location")}</h3>
               <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{t("result.next_steps_location_desc")}</p>
             </Link>

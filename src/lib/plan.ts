@@ -27,6 +27,8 @@ export function incrementDiagnosisCount(): number {
   return count;
 }
 
-export function shouldShowPaywall(): boolean {
-  return !isPro() && getDiagnosisCount() >= 1;
+export type PremiumFeature = "location" | "government_support";
+
+export function canAccessFeature(feature: PremiumFeature): boolean {
+  return isPro();
 }
