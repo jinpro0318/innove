@@ -30,5 +30,5 @@ export function incrementDiagnosisCount(): number {
 export type PremiumFeature = "location" | "government_support";
 
 export function canAccessFeature(feature: PremiumFeature): boolean {
-  return isPro();
+  return true;
 }

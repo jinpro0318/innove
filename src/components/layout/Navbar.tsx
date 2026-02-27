@@ -16,8 +16,7 @@ export default function Navbar() {
   const navLinks = [
     { label: t("nav.diagnose"), href: "/diagnose", pro: false },
     { label: t("nav.register"), href: "/register-guide", pro: false },
-    { label: t("nav.location"), href: "/location", pro: true },
-    { label: t("nav.pricing"), href: "/pricing", pro: false },
+    { label: t("nav.location"), href: "/location", pro: false },
     { label: t("nav.contact"), href: "/contact", pro: false },
   ];
 
