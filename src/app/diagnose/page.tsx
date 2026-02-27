@@ -92,6 +92,7 @@ export default function DiagnosePage() {
       };
       const roadmap = await generateRoadmap(input);
       localStorage.setItem(`roadmap_${roadmap.id}`, JSON.stringify(roadmap));
+      localStorage.setItem("selected_country", finalAnswers.country);
       clearInterval(progressInterval); setLoadingPct(100); clearInterval(tipInterval);
       setTimeout(() => { router.push(`/result?id=${roadmap.id}`); }, 600);
     } catch (err) {

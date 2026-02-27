@@ -165,7 +165,7 @@ function ResultContent() {
         <motion.section {...fadeUp} transition={{ duration: 0.5, delay: 0.6 }} className="mt-12">
           <h2 className="text-lg font-bold mb-5">{t("result.next_steps_title")}</h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            <Link href="/register-guide" className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-violet-500/30 hover:-translate-y-1">
+            <Link href={`/register-guide${result.input.country ? `?country=${result.input.country}` : ""}`} className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 transition-all duration-300 hover:border-violet-500/30 hover:-translate-y-1">
               <span className="text-2xl">🧭</span>
               <h3 className="mt-3 text-sm font-bold text-zinc-100">{t("result.next_steps_register")}</h3>
               <p className="mt-1 text-xs text-zinc-400 leading-relaxed">{t("result.next_steps_register_desc")}</p>

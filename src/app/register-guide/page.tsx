@@ -1,28 +1,34 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChevronDown } from "lucide-react";
+import { Suspense } from "react";
 
 import ChatBubble, { TypingIndicator } from "@/components/diagnose/ChatBubble";
 import OptionSelector, { SelectorOption } from "@/components/diagnose/OptionSelector";
 import ProgressBar from "@/components/diagnose/ProgressBar";
 import { businessCategories, type BusinessCode } from "@/data/business-codes";
+import { countries } from "@/data/countries";
+import { getCountryStartupInfo, type BusinessStructure, type CountryStartupInfo } from "@/data/country-startup-info";
+import { buildRegisterGuidePrompt } from "@/lib/gemini";
 import { useLocale } from "@/hooks/useLocale";
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5; // 0: country, 1: category, 2: code/detail, 3: structure, 4: location
 
 interface ChatEntry {
   role: "ai" | "user";
   text: string;
-  widget?: "codes" | "tax" | "location";
+  widget?: "codes" | "tax" | "location" | "structure";
 }
 
 interface Answers {
+  country: string;
   category: string;
   businessCode: string;
-  taxType: string;
+  structureType: string;
   locationType: string;
 }
 
@@ -35,10 +41,10 @@ interface RegistrationResult {
   warnings: string[];
 }
 
-export default function RegisterGuidePage() {
+function RegisterGuideContent() {
+  const searchParams = useSearchParams();
   const bottomRef = useRef<HTMLDivElement>(null);
   const { locale, t, tArray } = useLocale();
-  const tips = tArray("register_guide.step4_tips") as string[];
   const isEn = locale === "en";
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -52,15 +58,42 @@ export default function RegisterGuidePage() {
   const [loadingError, setLoadingError] = useState<string | null>(null);
   const [selectedCodes, setSelectedCodes] = useState<BusinessCode[]>([]);
   const [result, setResult] = useState<RegistrationResult | null>(null);
+  const [countryInfo, setCountryInfo] = useState<CountryStartupInfo | null>(null);
+  const [autoCountry, setAutoCountry] = useState<string | null>(null);
+
+  // auto-detect country from URL params or localStorage
+  useEffect(() => {
+    const urlCountry = searchParams.get("country");
+    const savedCountry = typeof window !== "undefined" ? localStorage.getItem("selected_country") : null;
+    if (urlCountry && countries.find((c) => c.code === urlCountry)) {
+      setAutoCountry(urlCountry);
+    } else if (savedCountry && countries.find((c) => c.code === savedCountry)) {
+      setAutoCountry(savedCountry);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatHistory, isTyping, showOptions, result]);
 
   useEffect(() => {
-    pushAI(t("register_guide.step1_ask"));
+    if (autoCountry) {
+      const c = countries.find((co) => co.code === autoCountry);
+      const name = isEn ? c?.name_en : c?.name_ko;
+      pushAI(`${c?.flag} ${name} ${t("register_guide.country_auto_detected")}\n\n${t("register_guide.step1_ask")}`);
+      const info = getCountryStartupInfo(autoCountry);
+      setCountryInfo(info);
+      setAnswers({ country: autoCountry });
+      setCurrentStep(1);
+    } else {
+      pushAI(t("register_guide.step0_ask"));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const tips = countryInfo
+    ? (isEn ? countryInfo.loadingTips_en : countryInfo.loadingTips_ko)
+    : (tArray("register_guide.step4_tips") as string[]);
 
   function pushAI(text: string, widget?: ChatEntry["widget"]) {
     setIsTyping(true);
@@ -76,42 +109,58 @@ export default function RegisterGuidePage() {
     (value: string, label: string) => {
       setChatHistory((h) => [...h, { role: "user", text: label }]);
       setShowOptions(false);
-      const nextStep = currentStep + 1;
-      const keys: (keyof Answers)[] = ["category", "businessCode", "taxType", "locationType"];
+      const keys: (keyof Answers)[] = ["country", "category", "businessCode", "structureType", "locationType"];
       const updated = { ...answers, [keys[currentStep]]: value };
       setAnswers(updated);
+      const nextStep = currentStep + 1;
       setCurrentStep(nextStep);
 
-      if (nextStep === 1) {
-        // Show business codes for selected category
-        const cat = businessCategories.find((c) => c.id === value);
-        if (cat) {
-          setSelectedCodes(cat.codes);
-          pushAI(t("register_guide.step1_codes_title") + "\n" + t("register_guide.step1_codes_sub"), "codes");
+      if (currentStep === 0) {
+        // Country selected → load country info, ask category
+        const info = getCountryStartupInfo(value);
+        setCountryInfo(info);
+        pushAI(t("register_guide.step1_ask"));
+      } else if (currentStep === 1) {
+        // Category selected → show codes/details
+        const isKR = updated.country === "KR";
+        if (isKR) {
+          const cat = businessCategories.find((c) => c.id === value);
+          if (cat) {
+            setSelectedCodes(cat.codes);
+            pushAI(t("register_guide.step1_codes_title") + "\n" + t("register_guide.step1_codes_sub"), "codes");
+          }
+        } else {
+          // For non-KR countries, use country-specific categories as detail selection
+          const info = countryInfo;
+          if (info) {
+            const cat = info.businessCategories.find((c) => c.id === value);
+            const desc = isEn ? cat?.desc_en : cat?.desc_ko;
+            pushAI(`${desc ? desc + "\n\n" : ""}${t("register_guide.step2_detail_ask")}`, "codes");
+          }
         }
-      } else if (nextStep === 2) {
-        // Show tax type comparison
-        pushAI(t("register_guide.step2_ask"), "tax");
-      } else if (nextStep === 3) {
-        // Show location options
+      } else if (currentStep === 2) {
+        // Code/detail selected → show business structure comparison
+        pushAI(t("register_guide.step3_structure_ask"), "structure");
+      } else if (currentStep === 3) {
+        // Structure selected → show location options
         pushAI(t("register_guide.step3_ask"), "location");
       } else if (nextStep >= TOTAL_STEPS) {
         startLoading(updated as Answers);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentStep, answers, locale]
+    [currentStep, answers, locale, countryInfo]
   );
 
   function handleBack() {
-    if (currentStep <= 0) return;
+    if (currentStep <= 0 || (currentStep <= 1 && autoCountry)) return;
     setChatHistory((h) => {
       const c = [...h];
       if (c.length && c[c.length - 1].role === "user") c.pop();
       if (c.length && c[c.length - 1].role === "ai") c.pop();
       return c;
     });
-    const keys: (keyof Answers)[] = ["category", "businessCode", "taxType", "locationType"];
+    const keys: (keyof Answers)[] = ["country", "category", "businessCode", "structureType", "locationType"];
     const prev = currentStep - 1;
     const updated = { ...answers };
     delete updated[keys[prev]];
@@ -119,7 +168,8 @@ export default function RegisterGuidePage() {
     setCurrentStep(prev);
     setShowOptions(true);
     setIsTyping(false);
-    if (prev === 0) setSelectedCodes([]);
+    if (prev <= 1) setSelectedCodes([]);
+    if (prev === 0) setCountryInfo(null);
   }
 
   async function startLoading(finalAnswers: Answers) {
@@ -135,51 +185,46 @@ export default function RegisterGuidePage() {
       if (pct >= 90) clearInterval(progressInterval);
     }, 120);
     let tip = 0;
+    const curTips = tips;
     const tipInterval = setInterval(() => {
-      tip = (tip + 1) % tips.length;
+      tip = (tip + 1) % curTips.length;
       setTipIndex(tip);
     }, 2000);
 
     try {
-      const cat = businessCategories.find((c) => c.id === finalAnswers.category);
-      const code = cat?.codes.find((c) => c.code === finalAnswers.businessCode);
+      const isKR = finalAnswers.country === "KR";
+
+      // Get category/code label for prompt
+      let categoryLabel = "";
+      let codeLabel = "";
+      if (isKR) {
+        const cat = businessCategories.find((c) => c.id === finalAnswers.category);
+        const code = cat?.codes.find((c) => c.code === finalAnswers.businessCode);
+        categoryLabel = isEn ? (cat?.label_en ?? "") : (cat?.label_ko ?? "");
+        codeLabel = `${isEn ? code?.name_en : code?.name_ko} (${code?.code})`;
+      } else {
+        const info = countryInfo;
+        const cat = info?.businessCategories.find((c) => c.id === finalAnswers.category);
+        categoryLabel = isEn ? (cat?.label_en ?? "") : (cat?.label_ko ?? "");
+        codeLabel = finalAnswers.businessCode; // the detail value
+      }
+
+      // Get structure label
+      const structure = countryInfo?.businessStructures.find((s) => s.id === finalAnswers.structureType);
+      const structureLabel = isEn ? (structure?.name_en ?? finalAnswers.structureType) : (structure?.name_ko ?? finalAnswers.structureType);
 
       const { GoogleGenerativeAI } = await import("@google/generative-ai");
       const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY ?? "");
+      const systemPrompt = buildRegisterGuidePrompt(finalAnswers.country, locale);
       const model = genAI.getGenerativeModel({
         model: "gemini-2.5-flash-lite",
-        systemInstruction: `너는 한국 사업자등록 전문 컨설턴트 AI야.
-사용자의 업종, 과세유형, 사업장 유형에 맞는 사업자등록 가이드를 생성해.
-
-반드시 아래 JSON 형식으로만 응답해. 마크다운 코드블록이나 다른 텍스트 절대 포함하지 마.
-
-{
-  "summary": "한 줄 요약 (예: 간이과세 통신판매업 자택 사업자등록 가이드)",
-  "steps": [
-    {
-      "title": "절차 제목",
-      "description": "구체적 설명 (실제 사이트, 기관명 포함)",
-      "where": "어디서 (홈택스, 세무서 등)",
-      "documents": "필요 서류",
-      "time": "소요 시간",
-      "cost": "비용",
-      "isRequired": true
-    }
-  ],
-  "totalTime": "전체 예상 소요 시간",
-  "totalCost": "전체 예상 비용",
-  "tips": ["실용적인 꿀팁 3~5개"],
-  "warnings": ["주의사항 2~3개"]
-}
-
-steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
-사용자 locale에 맞는 언어로 응답.`,
+        systemInstruction: systemPrompt,
       });
 
       const langInstruction =
         locale === "en" ? "Respond entirely in English." : "한국어로 응답해줘.";
 
-      const userPrompt = `업종: ${isEn ? code?.name_en : code?.name_ko} (${code?.code}), 과세유형: ${finalAnswers.taxType}, 사업장: ${finalAnswers.locationType}. 맞춤 사업자등록 가이드를 JSON으로 생성해줘. ${langInstruction}`;
+      const userPrompt = `업종: ${categoryLabel} - ${codeLabel}, 사업자유형: ${structureLabel}, 사업장: ${finalAnswers.locationType}. 맞춤 사업자등록 가이드를 JSON으로 생성해줘. ${langInstruction}`;
 
       const aiResult = await model.generateContent(userPrompt);
       const text = aiResult.response.text();
@@ -205,27 +250,88 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
   }
 
   function getCurrentOptions(): { options: SelectorOption[]; layout: "grid-2" | "grid-4" | "buttons" } {
+    // Step 0: Country selection
     if (currentStep === 0) {
       return {
-        options: businessCategories.map((cat) => ({
-          value: cat.id,
-          label: isEn ? cat.label_en : cat.label_ko,
-          icon: cat.icon,
+        options: countries.map((c) => ({
+          value: c.code,
+          label: isEn ? c.name_en : c.name_ko,
+          icon: c.flag,
+          sub: c.currency,
         })),
-        layout: "grid-2",
+        layout: "grid-4",
       };
     }
+
+    // Step 1: Category selection (country-specific or KR default)
     if (currentStep === 1) {
-      return {
-        options: selectedCodes.map((code) => ({
-          value: code.code,
-          label: isEn ? code.name_en : code.name_ko,
-          sub: `${code.code} · ${isEn ? code.desc_en : code.desc_ko}`,
-        })),
-        layout: "buttons",
-      };
+      const isKR = answers.country === "KR";
+      if (isKR) {
+        return {
+          options: businessCategories.map((cat) => ({
+            value: cat.id,
+            label: isEn ? cat.label_en : cat.label_ko,
+            icon: cat.icon,
+          })),
+          layout: "grid-2",
+        };
+      }
+      // Non-KR: use country-specific categories
+      if (countryInfo) {
+        return {
+          options: countryInfo.businessCategories.map((cat) => ({
+            value: cat.id,
+            label: isEn ? cat.label_en : cat.label_ko,
+            icon: cat.icon,
+          })),
+          layout: "grid-2",
+        };
+      }
+      return { options: [], layout: "grid-2" };
     }
+
+    // Step 2: Code/detail selection
     if (currentStep === 2) {
+      const isKR = answers.country === "KR";
+      if (isKR) {
+        return {
+          options: selectedCodes.map((code) => ({
+            value: code.code,
+            label: isEn ? code.name_en : code.name_ko,
+            sub: `${code.code} · ${isEn ? code.desc_en : code.desc_ko}`,
+          })),
+          layout: "buttons",
+        };
+      }
+      // Non-KR: show sub-details based on selected category
+      if (countryInfo) {
+        const cat = countryInfo.businessCategories.find((c) => c.id === answers.category);
+        if (cat) {
+          return {
+            options: [
+              { value: isEn ? cat.desc_en : cat.desc_ko, label: isEn ? cat.label_en : cat.label_ko, icon: cat.icon },
+            ],
+            layout: "buttons",
+          };
+        }
+      }
+      return { options: [], layout: "buttons" };
+    }
+
+    // Step 3: Business structure comparison
+    if (currentStep === 3) {
+      if (countryInfo) {
+        return {
+          options: countryInfo.businessStructures.map((s) => ({
+            value: s.id,
+            label: isEn ? s.name_en : s.name_ko,
+            icon: s.name_local ? undefined : "🏢",
+            sub: s.name_local,
+          })),
+          layout: "buttons",
+        };
+      }
+      // Fallback for KR (already in countryInfo, but just in case)
       return {
         options: [
           { value: "simplified", label: t("register_guide.simplified.name"), icon: "📊" },
@@ -235,7 +341,18 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
         layout: "buttons",
       };
     }
-    // Step 3
+
+    // Step 4: Location type
+    if (countryInfo) {
+      return {
+        options: countryInfo.locationTypes.map((loc) => ({
+          value: loc.id,
+          label: isEn ? loc.name_en : loc.name_ko,
+          icon: loc.icon,
+        })),
+        layout: "buttons",
+      };
+    }
     return {
       options: [
         { value: "home", label: t("register_guide.home.name"), icon: "🏠" },
@@ -252,7 +369,7 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
       <div className="min-h-screen bg-[#0A0A0F] pb-20">
         <div className="mx-auto max-w-3xl px-4 pt-24 sm:px-6">
           <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Link href="/register-guide" onClick={() => { setResult(null); setCurrentStep(0); setAnswers({}); setChatHistory([]); setSelectedCodes([]); setTimeout(() => pushAI(t("register_guide.step1_ask")), 100); }} className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200 mb-6 transition-colors">
+            <Link href="/register-guide" onClick={() => { setResult(null); setCurrentStep(autoCountry ? 1 : 0); setAnswers(autoCountry ? { country: autoCountry } : {}); setChatHistory([]); setSelectedCodes([]); setTimeout(() => pushAI(autoCountry ? t("register_guide.step1_ask") : t("register_guide.step0_ask")), 100); }} className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200 mb-6 transition-colors">
               <ArrowLeft size={16} />
               {t("register_guide.back")}
             </Link>
@@ -365,11 +482,13 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
 
   // --- Chat ---
   const opts = getCurrentOptions();
+  const canGoBack = autoCountry ? currentStep > 1 : currentStep > 0;
+
   return (
     <div className="flex min-h-screen flex-col bg-[#0A0A0F]">
       <div className="sticky top-0 z-40 border-b border-zinc-800/50 bg-[#0A0A0F]/90 backdrop-blur-xl px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-2xl items-center gap-3">
-          {currentStep > 0 ? (
+          {canGoBack ? (
             <button onClick={handleBack} className="flex h-8 w-8 items-center justify-center rounded-xl text-zinc-400 transition-colors duration-200 hover:bg-zinc-800 hover:text-white">
               <ArrowLeft size={18} />
             </button>
@@ -397,7 +516,18 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
                     </span>
                   ))}
                 </ChatBubble>
-                {/* Tax comparison widget */}
+                {/* Business structure comparison widget */}
+                {entry.widget === "structure" && entry.role === "ai" && countryInfo && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                    className="mt-3 ml-10"
+                  >
+                    <BusinessStructureComparison structures={countryInfo.businessStructures} isEn={isEn} t={t} />
+                  </motion.div>
+                )}
+                {/* Legacy tax comparison widget for KR backward compat */}
                 {entry.widget === "tax" && entry.role === "ai" && (
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
@@ -405,7 +535,11 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
                     transition={{ duration: 0.4, delay: 0.2 }}
                     className="mt-3 ml-10"
                   >
-                    <TaxComparison t={t} />
+                    {countryInfo ? (
+                      <BusinessStructureComparison structures={countryInfo.businessStructures} isEn={isEn} t={t} />
+                    ) : (
+                      <TaxComparison t={t} />
+                    )}
                   </motion.div>
                 )}
                 {/* Location info widget */}
@@ -416,7 +550,11 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
                     transition={{ duration: 0.4, delay: 0.2 }}
                     className="mt-3 ml-10"
                   >
-                    <LocationInfo t={t} selectedCategory={answers.category} />
+                    {countryInfo ? (
+                      <CountryLocationInfo info={countryInfo} isEn={isEn} selectedCategory={answers.category} />
+                    ) : (
+                      <LocationInfo t={t} selectedCategory={answers.category} />
+                    )}
                   </motion.div>
                 )}
               </div>
@@ -435,7 +573,54 @@ steps는 5~8개, 실제 한국 사업자등록 절차를 반영.
   );
 }
 
-// --- Tax Comparison Widget ---
+export default function RegisterGuidePage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>}>
+      <RegisterGuideContent />
+    </Suspense>
+  );
+}
+
+// --- Business Structure Comparison Widget (country-agnostic) ---
+function BusinessStructureComparison({ structures, isEn, t }: { structures: BusinessStructure[]; isEn: boolean; t: (key: string) => string }) {
+  return (
+    <div className="space-y-3">
+      {structures.map((s) => (
+        <div key={s.id} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+          <h4 className="text-sm font-bold text-zinc-100">
+            {isEn ? s.name_en : s.name_ko}
+            {s.name_local && <span className="ml-2 text-xs text-zinc-500">({s.name_local})</span>}
+          </h4>
+          <div className="mt-2 space-y-1.5 text-xs text-zinc-400">
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-20">{t("register_guide.step2_liability")}</span>
+              <span>{isEn ? s.liability_en : s.liability_ko}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-20">{t("register_guide.step2_setup_cost")}</span>
+              <span className="text-emerald-400">{isEn ? s.setup_cost_en : s.setup_cost_ko}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-20">{t("register_guide.step2_setup_time")}</span>
+              <span>{isEn ? s.setup_time_en : s.setup_time_ko}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-20">{t("register_guide.step2_pros")}</span>
+              <span className="text-emerald-400">{isEn ? s.pros_en : s.pros_ko}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-20">{t("register_guide.step2_cons")}</span>
+              <span className="text-red-400">{isEn ? s.cons_en : s.cons_ko}</span>
+            </div>
+          </div>
+          <p className="mt-2 text-[11px] text-violet-400">{t("register_guide.step2_recommend")}: {isEn ? s.recommend_en : s.recommend_ko}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --- Legacy Tax Comparison Widget (KR backward compat) ---
 function TaxComparison({ t }: { t: (key: string) => string }) {
   const types = ["simplified", "general", "corporation"] as const;
   return (
@@ -473,7 +658,40 @@ function TaxComparison({ t }: { t: (key: string) => string }) {
   );
 }
 
-// --- Location Info Widget ---
+// --- Country Location Info Widget ---
+function CountryLocationInfo({ info, isEn, selectedCategory }: { info: CountryStartupInfo; isEn: boolean; selectedCategory?: string }) {
+  const locationHref = selectedCategory ? `/location?industry=${selectedCategory}` : "/location";
+  return (
+    <div className="space-y-3">
+      {info.locationTypes.map((loc) => (
+        <div key={loc.id} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+          <h4 className="text-sm font-bold text-zinc-100">{loc.icon} {isEn ? loc.name_en : loc.name_ko}</h4>
+          <div className="mt-2 space-y-1.5 text-xs text-zinc-400">
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-16">{isEn ? "Cost" : "비용"}</span>
+              <span className="text-emerald-400">{isEn ? loc.cost_en : loc.cost_ko}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-16">{isEn ? "Note" : "주의"}</span>
+              <span>{isEn ? loc.caution_en : loc.caution_ko}</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="shrink-0 text-zinc-500 w-16">{isEn ? "Suitable" : "적합"}</span>
+              <span>{isEn ? loc.suitable_en : loc.suitable_ko}</span>
+            </div>
+          </div>
+          {(loc.id === "virtual" || loc.id === "office") && (
+            <Link href={locationHref} className="mt-3 inline-block text-xs text-violet-400 hover:text-violet-300 transition-colors">
+              🗺️ {isEn ? "Find location →" : "위치 찾기 →"}
+            </Link>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --- Legacy Location Info Widget (KR backward compat) ---
 function LocationInfo({ t, selectedCategory }: { t: (key: string) => string; selectedCategory?: string }) {
   const types = ["home", "virtual", "office"] as const;
   const locationHref = selectedCategory ? `/location?industry=${selectedCategory}` : "/location";
