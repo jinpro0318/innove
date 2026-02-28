@@ -36,10 +36,33 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #444;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #666;
+}
+
+/* Print styles for PDF export */
+@media print {
+  body {
+    background: white !important;
+    color: #111 !important;
+  }
+
+  nav, footer, .no-print, button {
+    display: none !important;
+  }
+
+  * {
+    color: #111 !important;
+    background: white !important;
+    border-color: #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
 }

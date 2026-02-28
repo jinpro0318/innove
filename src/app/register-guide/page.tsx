@@ -366,7 +366,7 @@ function RegisterGuideContent() {
   // --- Result view ---
   if (result) {
     return (
-      <div className="min-h-screen bg-[#0A0A0F] pb-20">
+      <div className="min-h-screen bg-[#09090B] pb-20">
         <div className="mx-auto max-w-3xl px-4 pt-24 sm:px-6">
           <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Link href="/register-guide" onClick={() => { setResult(null); setCurrentStep(autoCountry ? 1 : 0); setAnswers(autoCountry ? { country: autoCountry } : {}); setChatHistory([]); setSelectedCodes([]); setTimeout(() => pushAI(autoCountry ? t("register_guide.step1_ask") : t("register_guide.step0_ask")), 100); }} className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-200 mb-6 transition-colors">
@@ -379,11 +379,11 @@ function RegisterGuideContent() {
 
           {/* Summary cards */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="mt-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+            <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-5">
               <p className="text-xs text-zinc-500">{t("register_guide.result_total_time")}</p>
               <p className="mt-1 text-xl font-bold text-violet-400">{result.totalTime}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+            <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-5">
               <p className="text-xs text-zinc-500">{t("register_guide.result_total_cost")}</p>
               <p className="mt-1 text-xl font-bold text-emerald-400">{result.totalCost}</p>
             </div>
@@ -405,7 +405,7 @@ function RegisterGuideContent() {
               <h2 className="text-lg font-bold mb-4">💡 {t("register_guide.result_tips")}</h2>
               <div className="space-y-2">
                 {result.tips.map((tip, i) => (
-                  <div key={i} className="rounded-xl border border-zinc-800 bg-zinc-900/50 px-5 py-3 text-sm text-zinc-300">{tip}</div>
+                  <div key={i} className="rounded-xl border border-zinc-700/50 bg-zinc-800/40 px-5 py-3 text-sm text-zinc-300">{tip}</div>
                 ))}
               </div>
             </motion.section>
@@ -485,8 +485,8 @@ function RegisterGuideContent() {
   const canGoBack = autoCountry ? currentStep > 1 : currentStep > 0;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0A0A0F]">
-      <div className="sticky top-0 z-40 border-b border-zinc-800/50 bg-[#0A0A0F]/90 backdrop-blur-xl px-4 py-3 sm:px-6">
+    <div className="flex min-h-screen flex-col bg-[#09090B]">
+      <div className="sticky top-0 z-40 border-b border-zinc-700/50 bg-[#09090B]/90 backdrop-blur-xl px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-2xl items-center gap-3">
           {canGoBack ? (
             <button onClick={handleBack} className="flex h-8 w-8 items-center justify-center rounded-xl text-zinc-400 transition-colors duration-200 hover:bg-zinc-800 hover:text-white">
@@ -586,7 +586,7 @@ function BusinessStructureComparison({ structures, isEn, t }: { structures: Busi
   return (
     <div className="space-y-3">
       {structures.map((s) => (
-        <div key={s.id} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+        <div key={s.id} className="rounded-xl border border-zinc-700/50 bg-zinc-800/40 p-4">
           <h4 className="text-sm font-bold text-zinc-100">
             {isEn ? s.name_en : s.name_ko}
             {s.name_local && <span className="ml-2 text-xs text-zinc-500">({s.name_local})</span>}
@@ -626,7 +626,7 @@ function TaxComparison({ t }: { t: (key: string) => string }) {
   return (
     <div className="space-y-3">
       {types.map((type) => (
-        <div key={type} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+        <div key={type} className="rounded-xl border border-zinc-700/50 bg-zinc-800/40 p-4">
           <h4 className="text-sm font-bold text-zinc-100">{t(`register_guide.${type}.name`)}</h4>
           <div className="mt-2 space-y-1.5 text-xs text-zinc-400">
             <div className="flex gap-2">
@@ -664,7 +664,7 @@ function CountryLocationInfo({ info, isEn, selectedCategory }: { info: CountrySt
   return (
     <div className="space-y-3">
       {info.locationTypes.map((loc) => (
-        <div key={loc.id} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+        <div key={loc.id} className="rounded-xl border border-zinc-700/50 bg-zinc-800/40 p-4">
           <h4 className="text-sm font-bold text-zinc-100">{loc.icon} {isEn ? loc.name_en : loc.name_ko}</h4>
           <div className="mt-2 space-y-1.5 text-xs text-zinc-400">
             <div className="flex gap-2">
@@ -698,7 +698,7 @@ function LocationInfo({ t, selectedCategory }: { t: (key: string) => string; sel
   return (
     <div className="space-y-3">
       {types.map((type) => (
-        <div key={type} className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4">
+        <div key={type} className="rounded-xl border border-zinc-700/50 bg-zinc-800/40 p-4">
           <h4 className="text-sm font-bold text-zinc-100">{t(`register_guide.${type}.name`)}</h4>
           <div className="mt-2 space-y-1.5 text-xs text-zinc-400">
             <div className="flex gap-2">
@@ -729,7 +729,7 @@ function LocationInfo({ t, selectedCategory }: { t: (key: string) => string; sel
 function StepCard({ step, index, t }: { step: RegistrationResult["steps"][0]; index: number; t: (key: string) => string }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden">
+    <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 overflow-hidden">
       <button onClick={() => setIsOpen(!isOpen)} className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-zinc-800/30">
         <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-500/20 text-xs font-bold text-violet-400">
           {index + 1}

@@ -16,12 +16,12 @@ export default function Problem() {
   const stats = tArray("problem.stats") as { value: string; label: string }[];
 
   return (
-    <section className="relative py-24 md:py-32 bg-zinc-950/30">
+    <section className="relative py-20 md:py-28 bg-zinc-950/30">
       <div className="mx-auto max-w-7xl px-6">
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-zinc-100 md:text-5xl lg:text-6xl"
+          className="text-3xl font-bold text-zinc-100 md:text-4xl lg:text-5xl"
         >
           {t("problem.title")}
         </motion.h2>
@@ -38,7 +38,7 @@ export default function Problem() {
           <motion.div
             {...fadeUp}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="lg:col-span-3 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 md:p-9"
+            className="lg:col-span-3 rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-7 md:p-9"
           >
             <h3 className="text-xl font-bold text-zinc-100">{t("problem.checklist_title")}</h3>
             <div className="mt-6 space-y-4">
@@ -61,7 +61,7 @@ export default function Problem() {
                 key={i}
                 {...fadeUp}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
-                className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6"
+                className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-6"
               >
                 <div className="text-3xl font-bold text-zinc-100">{stat.value}</div>
                 <p className="mt-2 text-sm text-zinc-500">{stat.label}</p>

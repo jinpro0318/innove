@@ -33,12 +33,38 @@ export const metadata: Metadata = {
   description:
     "사업자등록, 상권분석, AI 로드맵까지. 창업의 모든 것을 여기서 끝내세요. Business registration, market analysis, and AI roadmaps — all in one place.",
   manifest: "/manifest.json",
+  openGraph: {
+    title: "StartupMate - 창업의 모든 것, 여기서 끝내세요",
+    description: "AI 기반 창업 진단, 사업자등록 가이드, 상권분석 지도, 12개국 글로벌 창업 지원. 베타 기간 모든 기능 무료!",
+    url: "https://innove-startup.github.io",
+    siteName: "StartupMate",
+    locale: "ko_KR",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "StartupMate - 창업 올인원 플랫폼",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "StartupMate - 창업의 모든 것, 여기서 끝내세요",
+    description: "AI 기반 창업 진단, 사업자등록 가이드, 상권분석 지도. 베타 기간 무료!",
+    images: ["/og-image.png"],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
   },
   icons: {
     apple: "/icon-192.svg",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

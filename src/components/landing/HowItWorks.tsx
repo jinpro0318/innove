@@ -20,12 +20,12 @@ export default function HowItWorks() {
   }[];
 
   return (
-    <section className="relative py-24 md:py-32 bg-zinc-950/30">
+    <section className="relative py-20 md:py-28 bg-zinc-950/30">
       <div className="mx-auto max-w-7xl px-6">
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.5 }}
-          className="text-center text-4xl font-bold text-zinc-100 md:text-5xl lg:text-6xl"
+          className="text-center text-3xl font-bold text-zinc-100 md:text-4xl lg:text-5xl"
         >
           {t("how_it_works.title")}
         </motion.h2>
@@ -43,7 +43,7 @@ export default function HowItWorks() {
                 className="relative text-center"
               >
                 <div className="relative mx-auto mb-6">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-800 bg-zinc-900/80 text-2xl shadow-lg">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-zinc-700/50 bg-zinc-800/40 text-2xl shadow-lg">
                     {step.emoji}
                   </div>
                   <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-violet-500 to-blue-500 text-[10px] font-bold text-white">
@@ -53,7 +53,7 @@ export default function HowItWorks() {
 
                 <h3 className="text-xl font-bold text-zinc-100">{step.title}</h3>
                 <p className="mt-2 text-sm text-zinc-400 max-w-xs mx-auto">{step.desc}</p>
-                <span className="mt-3 inline-block rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs text-zinc-500">
+                <span className="mt-3 inline-block rounded-full border border-zinc-700/50 bg-zinc-800/40 px-3 py-1 text-xs text-zinc-500">
                   {step.time}
                 </span>
               </motion.div>

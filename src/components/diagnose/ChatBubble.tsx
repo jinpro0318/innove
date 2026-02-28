@@ -26,8 +26,8 @@ export default function ChatBubble({ role, children }: ChatBubbleProps) {
       <div
         className={`max-w-[85%] px-4 py-3 text-sm leading-relaxed sm:max-w-[70%] ${
           isAI
-            ? "rounded-2xl rounded-bl-sm bg-white/5 text-gray-200"
-            : "rounded-2xl rounded-br-sm bg-gradient-to-r from-purple-600 to-purple-500 text-white"
+            ? "rounded-2xl rounded-bl-sm bg-zinc-800/60 border border-zinc-700/50 text-zinc-200"
+            : "rounded-2xl rounded-br-sm bg-gradient-to-r from-violet-600 to-blue-500 text-white"
         }`}
       >
         {children}
@@ -48,11 +48,11 @@ export function TypingIndicator() {
       <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-sm">
         🚀
       </div>
-      <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-white/5 px-4 py-3">
+      <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-zinc-800/60 border border-zinc-700/50 px-4 py-3">
         {[0, 1, 2].map((i) => (
           <motion.span
             key={i}
-            className="block h-1.5 w-1.5 rounded-full bg-gray-400"
+            className="block h-1.5 w-1.5 rounded-full bg-zinc-400"
             animate={{ y: [0, -5, 0] }}
             transition={{
               duration: 0.6,

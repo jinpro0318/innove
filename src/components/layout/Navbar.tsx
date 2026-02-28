@@ -77,7 +77,7 @@ export default function Navbar() {
 
           <button
             onClick={toggleLocale}
-            className="flex items-center gap-1.5 rounded-full border border-zinc-800 px-3 py-1.5 text-xs text-zinc-400 transition-all duration-200 hover:border-zinc-700 hover:text-zinc-200"
+            className="flex items-center gap-1.5 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400 transition-all duration-200 hover:border-zinc-700 hover:text-zinc-200"
           >
             <Globe size={14} />
             {locale === "ko" ? "🇰🇷 KR" : "🇺🇸 EN"}
@@ -132,7 +132,7 @@ export default function Navbar() {
               ))}
 
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="mt-2">
-                <button onClick={toggleLocale} className="flex items-center gap-1.5 rounded-full border border-zinc-800 px-3 py-1.5 text-xs text-zinc-400">
+                <button onClick={toggleLocale} className="flex items-center gap-1.5 rounded-full border border-zinc-700 px-3 py-1.5 text-xs text-zinc-400">
                   <Globe size={14} />
                   {locale === "ko" ? "🇰🇷 KR" : "🇺🇸 EN"}
                 </button>

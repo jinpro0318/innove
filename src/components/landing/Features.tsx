@@ -21,12 +21,12 @@ export default function Features() {
   }[];
 
   return (
-    <section id="features" className="relative py-24 md:py-32 bg-zinc-950/30">
+    <section id="features" className="relative py-20 md:py-28 bg-zinc-950/30">
       <div className="mx-auto max-w-7xl px-6">
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-zinc-100 md:text-5xl lg:text-6xl"
+          className="text-3xl font-bold text-zinc-100 md:text-4xl lg:text-5xl"
         >
           {t("features.title")}
         </motion.h2>
@@ -38,7 +38,7 @@ export default function Features() {
             {...fadeUp}
             transition={{ duration: 0.5, delay: 0.1 }}
             whileHover={{ y: -4 }}
-            className="sm:col-span-2 group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 md:p-9 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
+            className="sm:col-span-2 group rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-7 md:p-9 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
           >
             <span className="text-3xl">{bento[0].emoji}</span>
             <h3 className="mt-4 text-xl font-bold text-zinc-100">{bento[0].title}</h3>
@@ -60,7 +60,7 @@ export default function Features() {
             {...fadeUp}
             transition={{ duration: 0.5, delay: 0.15 }}
             whileHover={{ y: -4 }}
-            className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/5"
+            className="group rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-7 transition-all duration-300 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/5"
           >
             <span className="text-3xl">{bento[1].emoji}</span>
             <h3 className="mt-4 text-lg font-bold text-zinc-100">{bento[1].title}</h3>
@@ -77,7 +77,7 @@ export default function Features() {
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.2 + i * 0.08 }}
               whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
+              className="group rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-7 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
             >
               <span className="text-3xl">{item.emoji}</span>
               <h3 className="mt-4 text-lg font-bold text-zinc-100">{item.title}</h3>
@@ -105,7 +105,7 @@ export default function Features() {
             {...fadeUp}
             transition={{ duration: 0.5, delay: 0.4 }}
             whileHover={{ y: -4 }}
-            className="sm:col-span-3 group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 md:p-9 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
+            className="sm:col-span-3 group rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-7 md:p-9 transition-all duration-300 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5"
           >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>

@@ -19,12 +19,12 @@ export default function TargetUsers() {
   }[];
 
   return (
-    <section className="relative py-24 md:py-32">
+    <section className="relative py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <motion.h2
           {...fadeUp}
           transition={{ duration: 0.5 }}
-          className="text-center text-4xl font-bold text-zinc-100 md:text-5xl lg:text-6xl"
+          className="text-center text-3xl font-bold text-zinc-100 md:text-4xl lg:text-5xl"
         >
           {t("target.title")}
         </motion.h2>
@@ -36,7 +36,7 @@ export default function TargetUsers() {
               {...fadeUp}
               transition={{ duration: 0.5, delay: 0.15 + i * 0.1 }}
               whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 p-7 transition-all duration-300 hover:border-violet-500/30"
+              className="group rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-7 transition-all duration-300 hover:border-violet-500/30"
             >
               <span className="text-4xl">{card.emoji}</span>
               <h3 className="mt-5 text-xl font-bold text-zinc-100">{card.title}</h3>

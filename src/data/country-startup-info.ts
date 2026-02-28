@@ -56,6 +56,28 @@ export interface GovernmentResource {
   desc_en: string;
 }
 
+export interface RegistrationStep {
+  step: number;
+  title_ko: string;
+  title_en: string;
+  desc_ko: string;
+  desc_en: string;
+  duration_ko: string;
+  duration_en: string;
+  cost_ko?: string;
+  cost_en?: string;
+}
+
+export interface SupportProgram {
+  name_ko: string;
+  name_en: string;
+  desc_ko: string;
+  desc_en: string;
+  amount_ko?: string;
+  amount_en?: string;
+  url?: string;
+}
+
 export interface CountryStartupInfo {
   code: string;
   businessStructures: BusinessStructure[];
@@ -63,6 +85,12 @@ export interface CountryStartupInfo {
   locationTypes: LocationType[];
   taxDeadlines: TaxDeadline[];
   governmentResources: GovernmentResource[];
+  registrationSteps: RegistrationStep[];
+  supportPrograms: SupportProgram[];
+  tips_ko: string[];
+  tips_en: string[];
+  warningForForeigners_ko: string;
+  warningForForeigners_en: string;
   aiPromptContext: string;
   loadingTips_ko: string[];
   loadingTips_en: string[];
@@ -127,6 +155,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "창업진흥원", name_en: "Korea Startup Agency", url: "https://www.kised.or.kr", desc_ko: "창업 지원사업, 멘토링", desc_en: "Startup support, mentoring" },
       { name_ko: "홈택스", name_en: "Hometax", url: "https://www.hometax.go.kr", desc_ko: "사업자등록, 세금신고", desc_en: "Business registration, tax filing" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "업종 및 사업형태 결정", title_en: "Decide business type & structure", desc_ko: "간이과세/일반과세/법인 중 선택", desc_en: "Choose simplified/general/corporation", duration_ko: "1일", duration_en: "1 day" },
+      { step: 2, title_ko: "사업자등록 신청", title_en: "Apply for business registration", desc_ko: "홈택스 온라인 또는 세무서 방문", desc_en: "Online via Hometax or visit tax office", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 3, title_ko: "통신판매업 신고 (해당 시)", title_en: "Online sales notification (if applicable)", desc_ko: "온라인 판매 시 구청에 신고", desc_en: "Report to district office for online sales", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 4, title_ko: "사업용 계좌 개설", title_en: "Open business bank account", desc_ko: "사업자등록증으로 은행 방문", desc_en: "Visit bank with registration certificate", duration_ko: "1일", duration_en: "1 day" },
+      { step: 5, title_ko: "카드결제 단말기 설치 (해당 시)", title_en: "Set up card payment (if applicable)", desc_ko: "PG사 가입 또는 카드 단말기 신청", desc_en: "Sign up with PG or apply for card terminal", duration_ko: "3~7일", duration_en: "3-7 days" },
+    ],
+    supportPrograms: [
+      { name_ko: "소상공인 정책자금", name_en: "SME Policy Fund", desc_ko: "저금리 운전/시설 자금 대출", desc_en: "Low-interest operating/facility loans", amount_ko: "최대 1억원", amount_en: "Up to ₩100M", url: "https://www.semas.or.kr" },
+      { name_ko: "창업사관학교", name_en: "Startup Academy", desc_ko: "예비창업자 교육+사업화 지원", desc_en: "Pre-startup education + commercialization support", amount_ko: "최대 1억원", amount_en: "Up to ₩100M", url: "https://www.kised.or.kr" },
+      { name_ko: "청년창업사관학교", name_en: "Youth Startup Academy", desc_ko: "만 39세 이하 청년 창업 지원", desc_en: "Startup support for age 39 and under", amount_ko: "최대 1억원", amount_en: "Up to ₩100M" },
+    ],
+    tips_ko: [
+      "간이과세자는 연 매출 1억 400만원 미만 시 부가세 부담이 적어 초기 사업에 유리합니다",
+      "사업자등록 전 지출한 비용도 사전에 영수증을 모아두면 비용 처리 가능합니다",
+      "통신판매업 신고 없이 온라인 판매 시 과태료가 부과됩니다",
+      "소진공·창진원 지원사업은 매년 1~3월에 공고가 집중됩니다",
+    ],
+    tips_en: [
+      "Simplified taxpayer status is beneficial for early-stage businesses with revenue under ₩104M",
+      "Keep receipts for pre-registration expenses — they can be claimed as business costs",
+      "Online sales without notification may result in fines",
+      "Government support programs are mainly announced between January and March",
+    ],
+    warningForForeigners_ko: "외국인은 외국인등록증(체류자격)이 필요하며, F-2/F-5/F-6 비자 또는 D-8(투자) 비자가 있어야 사업자등록이 가능합니다. E-7(취업) 비자로는 사업자등록이 불가합니다.",
+    warningForForeigners_en: "Foreigners need an Alien Registration Card with eligible visa status (F-2/F-5/F-6 or D-8 investment visa). E-7 work visa holders cannot register a business.",
     aiPromptContext: `한국 창업 전문가로서 답변해. 홈택스 기반 사업자등록, 간이과세/일반과세/법인 구분, 통신판매업 신고, 소진공·창진원 지원사업을 정확히 안내해. 비용은 원화(₩)로 표시.`,
     loadingTips_ko: ["💡 사업자등록은 홈택스에서 온라인으로 가능해요", "💡 간이과세자는 연 매출 1억 400만원 미만이면 유리해요", "💡 통신판매업은 별도 신고가 필요해요"],
     loadingTips_en: ["💡 Registration can be done online via Hometax", "💡 Simplified tax is beneficial under ₩104M annual revenue", "💡 Online sales require separate notification"],
@@ -201,6 +255,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "IRS (국세청)", name_en: "Internal Revenue Service (IRS)", url: "https://www.irs.gov", desc_ko: "EIN 발급, 세금 신고", desc_en: "EIN issuance, tax filing" },
       { name_ko: "SCORE", name_en: "SCORE", url: "https://www.score.org", desc_ko: "무료 멘토링, 워크숍", desc_en: "Free mentoring, workshops" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "주(State) 선택", title_en: "Choose your state", desc_ko: "Delaware, Wyoming, 실제 거주 주 중 선택", desc_en: "Choose Delaware, Wyoming, or your home state", duration_ko: "1일", duration_en: "1 day" },
+      { step: 2, title_ko: "사업체 이름 등록", title_en: "Register business name", desc_ko: "주 정부 Secretary of State에 이름 확인·등록", desc_en: "Check & register with Secretary of State", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "$50~300", cost_en: "$50-300" },
+      { step: 3, title_ko: "EIN 발급", title_en: "Get EIN", desc_ko: "IRS 웹사이트에서 즉시 발급", desc_en: "Apply instantly on IRS website", duration_ko: "즉시", duration_en: "Instant", cost_ko: "무료", cost_en: "Free" },
+      { step: 4, title_ko: "Operating Agreement 작성", title_en: "Draft Operating Agreement", desc_ko: "LLC 운영 규정 문서 작성", desc_en: "Create LLC operating rules document", duration_ko: "1~3일", duration_en: "1-3 days" },
+      { step: 5, title_ko: "비즈니스 은행 계좌 개설", title_en: "Open business bank account", desc_ko: "EIN으로 Chase, Mercury 등에서 계좌 개설", desc_en: "Open account at Chase, Mercury, etc. with EIN", duration_ko: "1일", duration_en: "1 day" },
+    ],
+    supportPrograms: [
+      { name_ko: "SBA 소기업 대출", name_en: "SBA Small Business Loans", desc_ko: "정부 보증 저금리 대출", desc_en: "Government-backed low-interest loans", amount_ko: "최대 $5M", amount_en: "Up to $5M", url: "https://www.sba.gov" },
+      { name_ko: "SCORE 멘토링", name_en: "SCORE Mentoring", desc_ko: "무료 1:1 창업 멘토링", desc_en: "Free 1-on-1 startup mentoring", url: "https://www.score.org" },
+      { name_ko: "SBIR/STTR 그랜트", name_en: "SBIR/STTR Grants", desc_ko: "기술 스타트업 연방 보조금", desc_en: "Federal grants for tech startups", amount_ko: "Phase I: $275K, Phase II: $1M", amount_en: "Phase I: $275K, Phase II: $1M" },
+    ],
+    tips_ko: [
+      "LLC는 미국에서 1인 창업자에게 가장 인기 있는 형태입니다 (유한책임 + 세금 유연성)",
+      "Delaware/Wyoming주는 법인 설립에 유리하지만, 실제 거주 주에도 등록이 필요할 수 있습니다",
+      "Sales Tax는 주마다 다르며 일부 주(OR, MT, NH 등)는 면세입니다",
+      "분기별 예상세금(Estimated Tax) 미납 시 페널티가 부과됩니다",
+    ],
+    tips_en: [
+      "LLC is the most popular structure for solo founders (limited liability + tax flexibility)",
+      "Delaware/Wyoming are popular, but you may still need to register in your home state",
+      "Sales Tax varies by state — some states (OR, MT, NH) have no sales tax",
+      "Quarterly estimated tax penalties apply if payments are missed",
+    ],
+    warningForForeigners_ko: "비거주 외국인도 LLC/C-Corp 설립 가능하지만, ITIN(개인납세자번호) 또는 SSN이 필요합니다. 비자 없이 원격으로 운영 가능하나, 미국 내 소득에 대해 세금 신고 의무가 있습니다.",
+    warningForForeigners_en: "Non-resident foreigners can form LLC/C-Corp but need an ITIN or SSN. You can operate remotely without a visa, but must file taxes on US-sourced income.",
     aiPromptContext: `미국 창업 전문가로서 답변해. LLC/S-Corp/C-Corp 구분, EIN 발급, 주별 등록 절차, State Tax vs Federal Tax, Sales Tax, Self-employment Tax를 정확히 안내해. 비용은 달러($)로 표시. Delaware/Wyoming/Florida 등 인기 등록 주 정보 포함.`,
     loadingTips_ko: ["💡 미국에서 가장 인기 있는 사업 형태는 LLC예요", "💡 EIN(사업자번호)은 IRS에서 무료로 즉시 발급 가능해요", "💡 Delaware주는 법인 설립에 가장 유리한 주로 알려져 있어요"],
     loadingTips_en: ["💡 LLC is the most popular business structure in the US", "💡 EIN can be obtained instantly for free from the IRS", "💡 Delaware is known as the most business-friendly state"],
@@ -264,6 +344,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "법무국", name_en: "Legal Affairs Bureau", url: "https://houmukyoku.moj.go.jp", desc_ko: "법인등기", desc_en: "Corporate registration" },
       { name_ko: "세무서 (税務署)", name_en: "Tax Office", url: "https://www.nta.go.jp", desc_ko: "개업届 제출, 세금 신고", desc_en: "Opening notification, tax filing" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "사업형태 결정", title_en: "Choose business structure", desc_ko: "個人事業主/株式会社/合同会社 중 선택", desc_en: "Choose Sole Proprietor/Corporation/LLC", duration_ko: "1일", duration_en: "1 day" },
+      { step: 2, title_ko: "정관 작성 및 인증 (법인)", title_en: "Draft & certify articles (corp.)", desc_ko: "공증인에게 정관 인증 (株式会社만)", desc_en: "Notarize articles (Kabushiki only)", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "약 5만엔", cost_en: "~¥50,000" },
+      { step: 3, title_ko: "법무국 등기 (법인)", title_en: "Register at Legal Affairs Bureau", desc_ko: "法務局에 설립등기 신청", desc_en: "Submit incorporation at Legal Affairs Bureau", duration_ko: "1~2주", duration_en: "1-2 weeks", cost_ko: "6~15만엔", cost_en: "¥60K-150K" },
+      { step: 4, title_ko: "세무서 신고", title_en: "Tax office notification", desc_ko: "개업届·청색신고 승인 신청", desc_en: "Submit opening notice & blue return application", duration_ko: "즉시", duration_en: "Immediate", cost_ko: "무료", cost_en: "Free" },
+      { step: 5, title_ko: "은행 계좌 개설", title_en: "Open bank account", desc_ko: "법인은 등기 완료 후 은행 방문", desc_en: "Visit bank after registration is complete", duration_ko: "1~2주", duration_en: "1-2 weeks" },
+    ],
+    supportPrograms: [
+      { name_ko: "일본정책금융공고 창업 융자", name_en: "JFC Startup Loan", desc_ko: "무담보·무보증인 창업 대출", desc_en: "Unsecured, no-guarantor startup loan", amount_ko: "최대 7,200만엔", amount_en: "Up to ¥72M", url: "https://www.jfc.go.jp" },
+      { name_ko: "소규모사업자 지원금", name_en: "Small Business Subsidy", desc_ko: "판로 개척 등 경영 지원 보조금", desc_en: "Sales channel development subsidy", amount_ko: "최대 200만엔", amount_en: "Up to ¥2M" },
+      { name_ko: "창업 보조금 (사업재구축)", name_en: "Startup Subsidy", desc_ko: "신사업 진출 지원 보조금", desc_en: "New business expansion subsidy", amount_ko: "최대 1,500만엔", amount_en: "Up to ¥15M" },
+    ],
+    tips_ko: [
+      "合同会社(LLC)는 설립비가 株式会社의 절반이며 Apple Japan도 합동회사입니다",
+      "青色申告(청색신고)를 하면 65만엔 특별공제를 받을 수 있습니다",
+      "消費税는 연 매출 1,000만엔 이하면 면제됩니다 (인보이스 제도 도입 후 변경사항 있음)",
+      "일본정책금융공고 창업 융자는 무담보·무보증인으로 최대 7,200만엔까지 가능합니다",
+    ],
+    tips_en: [
+      "LLC setup costs half of Corporation — Apple Japan is also an LLC (合同会社)",
+      "Blue tax return (青色申告) gives you a ¥650,000 special deduction",
+      "Consumption tax is exempt under ¥10M annual revenue (changes with invoice system)",
+      "JFC startup loan offers up to ¥72M without collateral or guarantor",
+    ],
+    warningForForeigners_ko: "외국인은 経営・管理(경영관리) 비자가 필요하며, 자본금 500만엔 이상 + 사무소 확보가 비자 요건입니다. 日本語 능력이 없으면 행정서사(行政書士) 대행을 추천합니다.",
+    warningForForeigners_en: "Foreigners need a Business Manager visa (経営・管理), requiring ¥5M+ capital and a physical office. Consider hiring an administrative scrivener (行政書士) if you don't speak Japanese.",
     aiPromptContext: `일본 창업 전문가로서 답변해. 個人事業主/株式会社/合同会社 구분, 法務局 등기, 税務署 개업届, 消費税, 確定申告을 정확히 안내해. 비용은 엔화(¥)로 표시. 在留資格(비자) 관련 정보도 외국인 창업 시 포함.`,
     loadingTips_ko: ["💡 일본에서 合同会社(LLC)는 설립비가 株式会社의 절반이에요", "💡 개업届는 세무서에 무료로 제출할 수 있어요", "💡 일본정책금융공고에서 무담보 창업 대출이 가능해요"],
     loadingTips_en: ["💡 In Japan, LLC setup costs half of Corporation", "💡 Opening notification can be submitted for free", "💡 Japan Finance Corp offers unsecured startup loans"],
@@ -327,7 +433,33 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "국가세무총국", name_en: "State Taxation Administration", url: "https://www.chinatax.gov.cn", desc_ko: "세무 등록, 신고", desc_en: "Tax registration, filing" },
       { name_ko: "전국기업신용정보공시시스템", name_en: "National Enterprise Credit Information Publicity System", url: "https://www.gsxt.gov.cn", desc_ko: "기업 정보 조회, 연보 제출", desc_en: "Company info, annual report" },
     ],
-    aiPromptContext: `중국 창업 전문가(15년 현지 경험)로서 답변해. 营业执照 발급, 外商独资企业(WFOE), 增值税, 企业所得税, 社保, 公积金을 정확히 안내해. 비용은 위안(¥/CNY)으로 표시. 외국인의 경우 WFOE 절차와 상해/심천/광주 등 주요 도시별 차이점 포함.`,
+    registrationSteps: [
+      { step: 1, title_ko: "회사명 사전 심사", title_en: "Company name pre-approval", desc_ko: "시장감독관리국에서 이름 검색·승인", desc_en: "Search & approve name at Market Regulation Bureau", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 2, title_ko: "영업집조 신청", title_en: "Apply for Business License", desc_ko: "营业执照 온라인 또는 방문 신청", desc_en: "Apply for 营业执照 online or in person", duration_ko: "3~7일", duration_en: "3-7 days", cost_ko: "무료~소액", cost_en: "Free-minimal" },
+      { step: 3, title_ko: "인장 각인", title_en: "Carve company seals", desc_ko: "공장(公章), 재무장, 법인장 등 각인", desc_en: "Company seal, financial seal, legal person seal", duration_ko: "1~2일", duration_en: "1-2 days", cost_ko: "200~500위안", cost_en: "¥200-500 CNY" },
+      { step: 4, title_ko: "은행 기본 계좌 개설", title_en: "Open basic bank account", desc_ko: "영업집조로 은행 방문, 기본 계좌 개설", desc_en: "Visit bank with Business License", duration_ko: "1~2주", duration_en: "1-2 weeks" },
+      { step: 5, title_ko: "세무 등록 및 발표 매입", title_en: "Tax registration & invoice purchase", desc_ko: "세무국에 등록, 전자발표(电子发票) 설정", desc_en: "Register at tax bureau, set up e-invoices", duration_ko: "1~3일", duration_en: "1-3 days" },
+    ],
+    supportPrograms: [
+      { name_ko: "소형미리기업 세금 우대", name_en: "Small & Micro Enterprise Tax Benefits", desc_ko: "연 이익 300만위안 이하 기업소득세 감면", desc_en: "CIT reduction for annual profit under ¥3M", amount_ko: "세율 5%까지 감면", amount_en: "Tax rate reduced to 5%" },
+      { name_ko: "창업 보조금 (각 도시별)", name_en: "City-level Startup Grants", desc_ko: "상해/심천/광주 등 지방정부 창업 보조금", desc_en: "Local government startup grants in Shanghai/Shenzhen/Guangzhou", amount_ko: "도시별 상이 (1~50만위안)", amount_en: "Varies (¥10K-500K CNY)" },
+      { name_ko: "사회보험 감면", name_en: "Social Insurance Reduction", desc_ko: "소규모 기업 사회보험료 감면", desc_en: "Social insurance fee reduction for small businesses" },
+    ],
+    tips_ko: [
+      "외국인은 WFOE(외상독자기업) 형태로 설립하며, 100% 외국인 소유 가능합니다",
+      "营业执照(영업집조)는 한국의 사업자등록증에 해당하는 필수 서류입니다",
+      "중국은 매월 세금 신고가 필요하며, 지연 시 벌금이 부과됩니다",
+      "도시별로 창업 환경이 크게 다릅니다 — 상해(국제), 심천(IT), 광주(제조)가 대표적",
+    ],
+    tips_en: [
+      "Foreigners set up as WFOE (Wholly Foreign-Owned Enterprise) for 100% ownership",
+      "营业执照 (Business License) is the essential document like a business registration",
+      "China requires monthly tax filing — late filing incurs penalties",
+      "Business environments vary by city: Shanghai (international), Shenzhen (IT), Guangzhou (manufacturing)",
+    ],
+    warningForForeigners_ko: "WFOE 설립 시 등록자본금 납입, 실제 사무실 임대가 필요합니다. 업종에 따라 외국인 투자 제한(네거티브 리스트)이 있으며, 일부 업종(교육, 미디어)은 외국인 투자가 금지됩니다.",
+    warningForForeigners_en: "WFOE requires registered capital contribution and a physical office lease. Some industries have foreign investment restrictions (Negative List), and sectors like education and media may prohibit foreign investment.",
+    aiPromptContext: `중국 창업 전문가(15년 현지 경험)로서 답변해. 营业执照 발급, 外商独资企业(WFOE), 增值税, 企业所得税, 社保, 公积금을 정확히 안내해. 비용은 위안(¥/CNY)으로 표시. 외국인의 경우 WFOE 절차와 상해/심천/광주 등 주요 도시별 차이점 포함.`,
     loadingTips_ko: ["💡 중국에서 외국인은 WFOE(외상독자기업)로 설립해요", "💡 营业执照는 한국의 사업자등록증에 해당해요", "💡 중국은 매월 세금 신고가 필요해요"],
     loadingTips_en: ["💡 Foreigners in China set up as WFOE", "💡 营业执照 (Business License) equals business registration", "💡 China requires monthly tax filing"],
   },
@@ -388,6 +520,31 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "기획투자국 (DPI)", name_en: "Dept of Planning & Investment (DPI)", url: "https://dangkykinhdoanh.gov.vn", desc_ko: "기업 등록, 투자 인허가", desc_en: "Business registration, investment license" },
       { name_ko: "세무총국", name_en: "General Dept of Taxation", url: "https://www.gdt.gov.vn", desc_ko: "세금 등록, 신고", desc_en: "Tax registration, filing" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "투자등록증(IRC) 발급", title_en: "Obtain IRC (Investment Registration Certificate)", desc_ko: "기획투자국(DPI)에 투자 프로젝트 등록", desc_en: "Register investment project at DPI", duration_ko: "15일", duration_en: "15 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 2, title_ko: "기업등록증(ERC) 발급", title_en: "Obtain ERC (Enterprise Registration Certificate)", desc_ko: "DPI에서 법인 등록", desc_en: "Register company at DPI", duration_ko: "3~5일", duration_en: "3-5 days", cost_ko: "약 20만 VND", cost_en: "~$8" },
+      { step: 3, title_ko: "인장 등록", title_en: "Register company seal", desc_ko: "회사 인감 제작 및 등록", desc_en: "Create and register company seal", duration_ko: "2~3일", duration_en: "2-3 days", cost_ko: "약 50~100만 VND", cost_en: "$20-40" },
+      { step: 4, title_ko: "세무 등록", title_en: "Tax registration", desc_ko: "세무서에 납세자 등록", desc_en: "Register as taxpayer at tax office", duration_ko: "5~7일", duration_en: "5-7 days" },
+      { step: 5, title_ko: "은행 계좌 개설", title_en: "Open bank account", desc_ko: "법인 계좌 개설 (자본금 입금)", desc_en: "Open corporate account (deposit capital)", duration_ko: "1~2일", duration_en: "1-2 days" },
+    ],
+    supportPrograms: [
+      { name_ko: "SME 발전 기금", name_en: "SME Development Fund", desc_ko: "중소기업 저금리 대출 및 기술 지원", desc_en: "Low-interest loans and technical support for SMEs", amount_ko: "프로젝트별 상이", amount_en: "Varies by project" },
+      { name_ko: "하이테크 단지 인센티브", name_en: "Hi-Tech Park Incentives", desc_ko: "사이공 하이테크파크 등 입주 시 세금 감면", desc_en: "Tax incentives for Hi-Tech Park tenants", amount_ko: "법인세 4년 면세", amount_en: "4-year CIT exemption" },
+    ],
+    tips_ko: [
+      "외국인은 IRC(투자등록증) + ERC(기업등록증) 이중 등록이 필요합니다",
+      "호치민시는 상업·서비스, 하노이는 정부·제조업 중심입니다",
+      "법인세율 20%는 아시아에서 경쟁력 있는 수준입니다",
+      "부동산·유통 등 일부 업종은 외국인 지분율 제한(49%)이 있습니다",
+    ],
+    tips_en: [
+      "Foreigners need dual registration: IRC (Investment) + ERC (Enterprise)",
+      "HCMC focuses on commerce/services, Hanoi on government/manufacturing",
+      "20% corporate tax rate is competitive in Asia",
+      "Some sectors (real estate, distribution) have 49% foreign ownership caps",
+    ],
+    warningForForeigners_ko: "외국인은 IRC+ERC 이중 등록 필수이며, 투자 프로젝트 등록에 약 15일이 소요됩니다. 업종별 외국인 지분율 제한이 있으며, 현지 법률사무소 자문을 강력 권장합니다.",
+    warningForForeigners_en: "Foreigners must obtain both IRC and ERC — IRC takes about 15 days. Foreign ownership limits vary by sector. Strongly recommend consulting a local law firm.",
     aiPromptContext: `베트남 창업 전문가로서 답변해. 1인 유한회사/2인 유한회사/주식회사 구분, 기획투자국(DPI) 등록, IRC(투자등록증)/ERC(기업등록증), VAT, CIT를 정확히 안내해. 비용은 베트남 동(VND)과 달러 병기. 외국인은 IRC+ERC 이중 등록 절차 안내.`,
     loadingTips_ko: ["💡 베트남에서 외국인은 IRC+ERC 이중 등록이 필요해요", "💡 호치민시와 하노이의 사업 환경이 크게 달라요", "💡 베트남 법인세율은 20%로 아시아에서 경쟁력 있어요"],
     loadingTips_en: ["💡 Foreigners in Vietnam need dual IRC+ERC registration", "💡 HCMC and Hanoi have different business environments", "💡 Vietnam's corporate tax rate is competitive at 20%"],
@@ -450,6 +607,31 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "상무부 (DBD)", name_en: "Dept of Business Development (DBD)", url: "https://www.dbd.go.th", desc_ko: "법인등록, 사업자등록", desc_en: "Company registration" },
       { name_ko: "투자청 (BOI)", name_en: "Board of Investment (BOI)", url: "https://www.boi.go.th", desc_ko: "외국인 투자 인센티브", desc_en: "Foreign investment incentives" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "회사명 예약", title_en: "Reserve company name", desc_ko: "DBD(상무부)에서 회사명 예약", desc_en: "Reserve name at DBD (Dept of Business Development)", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 2, title_ko: "설립 준비 (MOA)", title_en: "Prepare Memorandum of Association", desc_ko: "정관 작성, 최소 3명의 발기인 확보", desc_en: "Draft articles, secure minimum 3 promoters", duration_ko: "1~3일", duration_en: "1-3 days" },
+      { step: 3, title_ko: "법인 등기", title_en: "Company registration", desc_ko: "DBD에 법인 등록 신청", desc_en: "Submit registration to DBD", duration_ko: "1~2주", duration_en: "1-2 weeks", cost_ko: "약 5,000~10,000 바트", cost_en: "~฿5K-10K" },
+      { step: 4, title_ko: "세무 등록", title_en: "Tax registration", desc_ko: "세무서(Revenue Department)에 등록, VAT 등록", desc_en: "Register at Revenue Department, VAT registration", duration_ko: "1~2일", duration_en: "1-2 days" },
+      { step: 5, title_ko: "사회보험 등록", title_en: "Social security registration", desc_ko: "직원 1명 이상 시 사회보험 등록", desc_en: "Register if you have 1+ employee", duration_ko: "1~3일", duration_en: "1-3 days" },
+    ],
+    supportPrograms: [
+      { name_ko: "BOI 투자 인센티브", name_en: "BOI Investment Incentives", desc_ko: "법인세 최대 8년 면제, 수입관세 면제 등", desc_en: "Up to 8-year CIT exemption, import duty exemption", amount_ko: "업종별 상이", amount_en: "Varies by sector", url: "https://www.boi.go.th" },
+      { name_ko: "SME 개발 은행 대출", name_en: "SME Development Bank Loans", desc_ko: "중소기업 전용 저금리 대출", desc_en: "Low-interest loans for SMEs", amount_ko: "최대 1,500만 바트", amount_en: "Up to ฿15M" },
+    ],
+    tips_ko: [
+      "외국인은 일반적으로 태국인 51% 지분이 필요합니다 (외국인사업법)",
+      "BOI 인증을 받으면 100% 외국인 소유 가능 + 법인세 최대 8년 면제",
+      "VAT 7%는 동남아시아에서 경쟁력 있는 수준입니다",
+      "방콕 외에 치앙마이, 푸켓도 디지털 노마드 창업에 인기입니다",
+    ],
+    tips_en: [
+      "Foreigners generally need 51% Thai ownership (Foreign Business Act)",
+      "BOI promotion allows 100% foreign ownership + up to 8-year CIT exemption",
+      "7% VAT is competitive in Southeast Asia",
+      "Besides Bangkok, Chiang Mai and Phuket are popular for digital nomad startups",
+    ],
+    warningForForeigners_ko: "외국인사업법(FBA)에 따라 외국인은 대부분 업종에서 51% 이상 지분 보유 불가합니다. BOI 인증 또는 FBA 면허를 통해 우회 가능하나, 노미니(명의 대여)는 불법입니다.",
+    warningForForeigners_en: "Under the Foreign Business Act (FBA), foreigners cannot hold majority shares in most sectors. Bypass is possible via BOI promotion or FBA license, but nominee arrangements are illegal.",
     aiPromptContext: `태국 창업 전문가로서 답변해. บริษัท จำกัด(유한회사), BOI 인센티브, 외국인사업법(FBA), 51% 태국인 지분 규정, VAT(7%), 법인세(20%)를 안내해. 비용은 바트(฿)로 표시.`,
     loadingTips_ko: ["💡 태국에서 외국인은 일반적으로 태국인 51% 지분이 필요해요", "💡 BOI 인증을 받으면 100% 외국인 소유가 가능해요", "💡 태국 VAT는 7%로 비교적 낮아요"],
     loadingTips_en: ["💡 Foreigners generally need 51% Thai ownership", "💡 BOI promotion allows 100% foreign ownership", "💡 Thailand's VAT is relatively low at 7%"],
@@ -502,6 +684,31 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "투자조정청 (BKPM)", name_en: "Investment Coordinating Board (BKPM)", url: "https://www.bkpm.go.id", desc_ko: "외국인 투자 등록, OSS 시스템", desc_en: "Foreign investment registration, OSS system" },
       { name_ko: "법무인권부", name_en: "Ministry of Law and Human Rights", url: "https://www.kemenkumham.go.id", desc_ko: "법인 설립 승인", desc_en: "Company establishment approval" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "회사명 승인", title_en: "Company name approval", desc_ko: "법무인권부(AHU Online)에서 이름 승인", desc_en: "Approve name via Ministry of Law (AHU Online)", duration_ko: "1~3일", duration_en: "1-3 days" },
+      { step: 2, title_ko: "정관 작성 (공증)", title_en: "Notarize articles of association", desc_ko: "공증인(Notaris)에게 정관 작성 의뢰", desc_en: "Engage Notaris for articles of association", duration_ko: "3~5일", duration_en: "3-5 days", cost_ko: "약 200~500만 IDR", cost_en: "$130-330" },
+      { step: 3, title_ko: "OSS에서 NIB 발급", title_en: "Obtain NIB via OSS", desc_ko: "Online Single Submission 시스템으로 사업자식별번호 발급", desc_en: "Get Business Identification Number via OSS", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 4, title_ko: "세무 등록 (NPWP)", title_en: "Tax registration (NPWP)", desc_ko: "세무서에서 법인 납세번호 발급", desc_en: "Obtain corporate tax ID at tax office", duration_ko: "1~5일", duration_en: "1-5 days" },
+      { step: 5, title_ko: "은행 계좌 개설", title_en: "Open bank account", desc_ko: "법인 계좌 개설 및 자본금 입금", desc_en: "Open corporate account and deposit capital", duration_ko: "1~2주", duration_en: "1-2 weeks" },
+    ],
+    supportPrograms: [
+      { name_ko: "KUR (국민사업 대출)", name_en: "KUR (People's Business Credit)", desc_ko: "중소기업 전용 정부 보조 대출", desc_en: "Government-subsidized loans for SMEs", amount_ko: "최대 5억 IDR", amount_en: "Up to IDR 500M (~$33K)" },
+      { name_ko: "세금 인센티브 (Tax Holiday)", name_en: "Tax Holiday", desc_ko: "대규모 투자 시 법인세 면제 (5~20년)", desc_en: "CIT exemption for large investments (5-20 years)", amount_ko: "투자액별 상이", amount_en: "Varies by investment" },
+    ],
+    tips_ko: [
+      "외국인 투자는 OSS(Online Single Submission) 시스템으로 온라인 처리됩니다",
+      "PT PMA 최소 투자금은 약 100억 루피아(약 $650K)이며 실투자 25% 필요",
+      "자카르타는 비즈니스 중심, 발리는 관광·디지털노마드 중심입니다",
+      "Negative Investment List에 따라 외국인 투자 제한 업종이 있습니다",
+    ],
+    tips_en: [
+      "Foreign investment is processed online via OSS (Online Single Submission)",
+      "PT PMA minimum investment is ~IDR 10B (~$650K) with 25% realized",
+      "Jakarta is the business hub, Bali focuses on tourism and digital nomads",
+      "Negative Investment List restricts foreign ownership in certain sectors",
+    ],
+    warningForForeigners_ko: "PT PMA 설립 시 최소 투자금 100억 IDR(~$650K)이 필요하며, 업종별 외국인 투자 제한(Negative Investment List)을 반드시 확인해야 합니다. 현지 공증인(Notaris)이 필수입니다.",
+    warningForForeigners_en: "PT PMA requires minimum IDR 10B (~$650K) investment. Must check the Negative Investment List for sector restrictions. A local Notaris is mandatory for the process.",
     aiPromptContext: `인도네시아 창업 전문가로서 답변해. PT/PT PMA 구분, OSS(Online Single Submission) 시스템, NIB(사업자식별번호), Negative Investment List, PPN(VAT 11%)을 안내해. 비용은 루피아(IDR)와 달러 병기.`,
     loadingTips_ko: ["💡 인도네시아 외국인 투자는 OSS 시스템으로 온라인 처리돼요", "💡 PT PMA 최소 투자금은 약 100억 루피아예요", "💡 자카르타와 발리의 사업 환경이 크게 달라요"],
     loadingTips_en: ["💡 Foreign investment uses the OSS online system", "💡 PT PMA minimum investment is ~IDR 10 billion", "💡 Jakarta and Bali have very different business environments"],
@@ -555,6 +762,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "Enterprise Singapore", name_en: "Enterprise Singapore", url: "https://www.enterprisesg.gov.sg", desc_ko: "스타트업 지원, 보조금", desc_en: "Startup support, grants" },
       { name_ko: "내국세청 (IRAS)", name_en: "IRAS", url: "https://www.iras.gov.sg", desc_ko: "세금 등록, 신고", desc_en: "Tax registration, filing" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "회사명 승인", title_en: "Approve company name", desc_ko: "ACRA BizFile+에서 이름 검색·예약", desc_en: "Search & reserve name on ACRA BizFile+", duration_ko: "즉시~1일", duration_en: "Instant-1 day", cost_ko: "S$15", cost_en: "S$15" },
+      { step: 2, title_ko: "법인 설립 등록", title_en: "Incorporate company", desc_ko: "BizFile+에서 온라인 법인 설립 신청", desc_en: "Apply online via BizFile+", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "S$300", cost_en: "S$300" },
+      { step: 3, title_ko: "은행 계좌 개설", title_en: "Open bank account", desc_ko: "DBS, OCBC, UOB 등에서 법인 계좌 개설", desc_en: "Open corporate account at DBS, OCBC, UOB", duration_ko: "1~2주", duration_en: "1-2 weeks" },
+      { step: 4, title_ko: "GST 등록 (해당 시)", title_en: "GST registration (if applicable)", desc_ko: "연 매출 S$1M 초과 시 IRAS에 GST 등록", desc_en: "Register GST at IRAS if revenue >S$1M", duration_ko: "1~3일", duration_en: "1-3 days" },
+      { step: 5, title_ko: "취업비자 신청 (외국인)", title_en: "Apply for work pass (foreigners)", desc_ko: "EntrePass 또는 Employment Pass 신청", desc_en: "Apply for EntrePass or Employment Pass", duration_ko: "4~8주", duration_en: "4-8 weeks" },
+    ],
+    supportPrograms: [
+      { name_ko: "Startup SG Founder", name_en: "Startup SG Founder", desc_ko: "첫 창업자 멘토링 + 최대 S$50K 지원", desc_en: "First-time founder mentoring + up to S$50K", amount_ko: "최대 S$50,000", amount_en: "Up to S$50,000", url: "https://www.startupsg.gov.sg" },
+      { name_ko: "Enterprise Development Grant", name_en: "Enterprise Development Grant (EDG)", desc_ko: "사업 역량 강화 지원금 (비용 70% 지원)", desc_en: "Business capability development (up to 70% support)", amount_ko: "프로젝트별 상이", amount_en: "Varies by project", url: "https://www.enterprisesg.gov.sg" },
+      { name_ko: "스타트업 면세 (SUTE)", name_en: "Start-Up Tax Exemption (SUTE)", desc_ko: "처음 3년간 법인세 면세 혜택", desc_en: "Tax exemption for first 3 years", amount_ko: "첫 S$200K 소득 면세", amount_en: "First S$200K income exempt" },
+    ],
+    tips_ko: [
+      "Pte. Ltd.는 1~3일이면 설립 완료 — 세계에서 가장 빠른 수준입니다",
+      "처음 3년간 첫 S$200K 소득에 대해 법인세 면세 혜택이 있습니다 (SUTE)",
+      "외국인은 현지 이사(Local Director)가 반드시 1명 필요합니다",
+      "싱가포르는 아시아 금융 허브로 글로벌 사업 거점에 최적입니다",
+    ],
+    tips_en: [
+      "Pte. Ltd. can be set up in 1-3 days — among the fastest in the world",
+      "Start-Up Tax Exemption (SUTE) provides tax-free status on first S$200K for 3 years",
+      "Foreigners must have at least 1 Local Director (Singapore resident)",
+      "Singapore is Asia's financial hub — ideal as a global business base",
+    ],
+    warningForForeigners_ko: "외국인은 현지 이사(Local Director, 싱가포르 시민권/영주권자) 1명이 반드시 필요합니다. 직접 운영하려면 EntrePass(창업비자)가 필요하며, 혁신적 사업 계획이 요구됩니다.",
+    warningForForeigners_en: "Foreigners must appoint at least 1 Local Director (Singapore citizen/PR). To run the business personally, you need an EntrePass (entrepreneur visa) with an innovative business plan.",
     aiPromptContext: `싱가포르 창업 전문가로서 답변해. Pte. Ltd. 설립, ACRA/BizFile+, 법인세(17%, 스타트업 면세), GST(9%), EntrePass(창업비자), Enterprise SG 지원사업을 안내해. 비용은 싱가포르 달러(S$)로 표시.`,
     loadingTips_ko: ["💡 싱가포르 Pte. Ltd.는 1~3일이면 설립 완료돼요", "💡 처음 3년간 법인세 면세 혜택이 있어요", "💡 싱가포르는 아시아 금융 허브로 글로벌 사업에 유리해요"],
     loadingTips_en: ["💡 Singapore Pte. Ltd. can be set up in 1-3 days", "💡 Tax exemption for first 3 years available", "💡 Singapore is Asia's financial hub for global business"],
@@ -618,6 +851,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "HMRC", name_en: "HM Revenue & Customs", url: "https://www.gov.uk/government/organisations/hm-revenue-customs", desc_ko: "세금 등록, Self Assessment", desc_en: "Tax registration, Self Assessment" },
       { name_ko: "Start Up Loans", name_en: "Start Up Loans", url: "https://www.startuploans.co.uk", desc_ko: "최대 £25,000 무이자 대출", desc_en: "Up to £25,000 interest-free loans", },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "회사명 확인", title_en: "Check company name", desc_ko: "Companies House에서 이름 중복 확인", desc_en: "Check name availability at Companies House", duration_ko: "즉시", duration_en: "Instant", cost_ko: "무료", cost_en: "Free" },
+      { step: 2, title_ko: "법인 등록", title_en: "Register company", desc_ko: "Companies House 온라인 등록 (Form IN01)", desc_en: "Register online at Companies House", duration_ko: "24시간 이내", duration_en: "Within 24 hours", cost_ko: "£12", cost_en: "£12" },
+      { step: 3, title_ko: "HMRC 등록", title_en: "Register with HMRC", desc_ko: "법인세, PAYE, VAT 등록", desc_en: "Register for Corporation Tax, PAYE, VAT", duration_ko: "1~5일", duration_en: "1-5 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 4, title_ko: "비즈니스 은행 계좌", title_en: "Open business bank account", desc_ko: "법인 계좌 개설 (Barclays, HSBC, Monzo 등)", desc_en: "Open account at Barclays, HSBC, Monzo, etc.", duration_ko: "1~2주", duration_en: "1-2 weeks" },
+      { step: 5, title_ko: "보험 가입", title_en: "Get business insurance", desc_ko: "Employers' Liability Insurance (직원 있을 경우 필수)", desc_en: "Employers' Liability Insurance (required if hiring)", duration_ko: "1일", duration_en: "1 day" },
+    ],
+    supportPrograms: [
+      { name_ko: "Start Up Loans", name_en: "Start Up Loans", desc_ko: "정부 지원 무이자 대출 + 멘토링", desc_en: "Government-backed interest-free loan + mentoring", amount_ko: "최대 £25,000", amount_en: "Up to £25,000", url: "https://www.startuploans.co.uk" },
+      { name_ko: "SEIS/EIS 세제 혜택", name_en: "SEIS/EIS Tax Relief", desc_ko: "투자자에게 세금 감면 → 투자 유치 용이", desc_en: "Tax relief for investors → easier fundraising", amount_ko: "SEIS 최대 £250K 투자", amount_en: "SEIS up to £250K investment" },
+      { name_ko: "Innovate UK 보조금", name_en: "Innovate UK Grants", desc_ko: "혁신 프로젝트 R&D 보조금", desc_en: "R&D grants for innovation projects", amount_ko: "프로젝트별 상이", amount_en: "Varies by project" },
+    ],
+    tips_ko: [
+      "영국 Ltd는 £12에 24시간 이내 설립 가능 — 세계에서 가장 쉽고 저렴합니다",
+      "VAT는 연 매출 £85,000 이상부터 등록 의무이며, 세율은 20%입니다",
+      "SEIS/EIS 제도를 활용하면 투자자에게 세금 혜택을 줄 수 있어 투자 유치에 유리합니다",
+      "Self Assessment 신고는 매년 1월 31일까지 완료해야 합니다",
+    ],
+    tips_en: [
+      "UK Ltd costs just £12 and takes under 24 hours — easiest and cheapest globally",
+      "VAT registration required above £85,000 annual revenue, rate is 20%",
+      "SEIS/EIS schemes provide tax relief to investors, making fundraising easier",
+      "Self Assessment must be filed by January 31st each year",
+    ],
+    warningForForeigners_ko: "외국인도 영국 거주 없이 Ltd 설립 가능합니다. 다만 최소 1명의 이사(Director)가 필요하며, 영국 주소(Registered Office)가 필요합니다. 비자 없이 원격 운영 가능합니다.",
+    warningForForeigners_en: "Foreigners can set up a UK Ltd without being a UK resident. At least 1 Director is required plus a UK Registered Office address. Remote operation is possible without a visa.",
     aiPromptContext: `영국 창업 전문가로서 답변해. Sole Trader/Ltd/LLP 구분, Companies House 등록, HMRC Self Assessment, Corporation Tax(25%), VAT(20%), National Insurance를 안내해. 비용은 파운드(£)로 표시.`,
     loadingTips_ko: ["💡 영국 Ltd는 £12에 24시간 이내 설립 가능해요", "💡 VAT는 연 매출 £85,000 이상부터 등록 필요해요", "💡 Start Up Loans에서 최대 £25,000 대출 가능해요"],
     loadingTips_en: ["💡 UK Ltd can be set up for £12 within 24 hours", "💡 VAT registration required over £85,000 annual revenue", "💡 Start Up Loans offers up to £25,000"],
@@ -680,6 +939,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "KfW 은행", name_en: "KfW Bank", url: "https://www.kfw.de", desc_ko: "창업 대출 (ERP-Gründerkredit)", desc_en: "Startup loans (ERP-Gründerkredit)" },
       { name_ko: "Finanzamt (세무서)", name_en: "Finanzamt (Tax Office)", url: "https://www.elster.de", desc_ko: "세금 등록, 신고", desc_en: "Tax registration, filing" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "사업 형태 결정", title_en: "Choose business structure", desc_ko: "Einzelunternehmen/GmbH/UG 또는 Freiberufler 판단", desc_en: "Determine if Einzelunternehmen/GmbH/UG or Freiberufler", duration_ko: "1일", duration_en: "1 day" },
+      { step: 2, title_ko: "영업등록 (Gewerbeanmeldung)", title_en: "Trade registration (Gewerbeanmeldung)", desc_ko: "관할 시청(Gewerbeamt)에서 영업 등록", desc_en: "Register at local Gewerbeamt (trade office)", duration_ko: "즉시~1일", duration_en: "Instant-1 day", cost_ko: "€20~50", cost_en: "€20-50" },
+      { step: 3, title_ko: "세무서 등록 (Finanzamt)", title_en: "Tax office registration", desc_ko: "Fragebogen zur steuerlichen Erfassung 제출", desc_en: "Submit tax registration questionnaire", duration_ko: "2~4주", duration_en: "2-4 weeks", cost_ko: "무료", cost_en: "Free" },
+      { step: 4, title_ko: "공증 및 상업등기 (법인)", title_en: "Notarize & commercial register (corp.)", desc_ko: "Notar 공증 후 Handelsregister 등록", desc_en: "Notarize at Notar, register at Handelsregister", duration_ko: "2~4주", duration_en: "2-4 weeks", cost_ko: "€1,000~2,500", cost_en: "€1,000-2,500" },
+      { step: 5, title_ko: "비즈니스 은행 계좌", title_en: "Open business bank account", desc_ko: "법인 계좌 개설 (N26 Business, Commerzbank 등)", desc_en: "Open account at N26 Business, Commerzbank, etc.", duration_ko: "1~2주", duration_en: "1-2 weeks" },
+    ],
+    supportPrograms: [
+      { name_ko: "KfW ERP-Gründerkredit", name_en: "KfW ERP Startup Credit", desc_ko: "정부 보증 저금리 창업 대출", desc_en: "Government-backed low-interest startup loan", amount_ko: "최대 €125,000", amount_en: "Up to €125,000", url: "https://www.kfw.de" },
+      { name_ko: "EXIST 창업 보조금", name_en: "EXIST Startup Grant", desc_ko: "대학 기반 기술 창업 보조금", desc_en: "University-based tech startup grant", amount_ko: "최대 €150,000/12개월", amount_en: "Up to €150,000/12 months" },
+      { name_ko: "Gründungszuschuss", name_en: "Startup Subsidy", desc_ko: "실업급여 수급자 창업 지원금", desc_en: "Startup subsidy for unemployment benefit recipients", amount_ko: "6개월간 실업급여+€300/월", amount_en: "6 months benefits + €300/mo" },
+    ],
+    tips_ko: [
+      "UG(미니 유한회사)는 자본금 €1부터 법인 설립이 가능합니다",
+      "Freiberufler(자유직업: IT, 컨설팅, 디자인 등)는 Gewerbeanmeldung 불요",
+      "KfW에서 최대 €125,000 저금리 창업 대출이 가능합니다",
+      "Gewerbesteuer(영업세)는 시/군별로 세율이 달라 입지 선정 시 확인 필요",
+    ],
+    tips_en: [
+      "UG (mini LLC) can be formed with just €1 capital",
+      "Freiberufler (freelancers in IT, consulting, design) don't need trade registration",
+      "KfW offers startup loans up to €125,000 at low interest",
+      "Gewerbesteuer (trade tax) rates vary by municipality — check when choosing location",
+    ],
+    warningForForeigners_ko: "EU 시민은 자유롭게 창업 가능합니다. 비EU 시민은 체류허가(Aufenthaltserlaubnis)에 자영업 허가가 포함되어야 합니다. 프리랜서 비자(Freiberufler-Visum)가 비교적 취득이 용이합니다.",
+    warningForForeigners_en: "EU citizens can freely start businesses. Non-EU citizens need a residence permit (Aufenthaltserlaubnis) with self-employment authorization. Freelancer visa (Freiberufler-Visum) is relatively easy to obtain.",
     aiPromptContext: `독일 창업 전문가로서 답변해. Einzelunternehmen/GmbH/UG 구분, Gewerbeanmeldung(영업등록), Finanzamt 세무등록, USt(부가세 19%), Gewerbesteuer(영업세), KfW 대출을 안내해. 비용은 유로(€)로 표시. Freiberufler(자유직업)과 Gewerbetreibende(영업자) 구분 설명.`,
     loadingTips_ko: ["💡 독일 UG는 자본금 €1부터 법인 설립이 가능해요", "💡 Freiberufler는 Gewerbeanmeldung 없이 사업 가능해요", "💡 KfW에서 최대 €125,000 창업 대출이 가능해요"],
     loadingTips_en: ["💡 German UG can be formed with just €1 capital", "💡 Freiberufler don't need trade registration", "💡 KfW offers startup loans up to €125,000"],
@@ -742,6 +1027,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "ATO", name_en: "Australian Taxation Office", url: "https://www.ato.gov.au", desc_ko: "ABN 등록, 세금 신고", desc_en: "ABN registration, tax filing" },
       { name_ko: "business.gov.au", name_en: "business.gov.au", url: "https://business.gov.au", desc_ko: "창업 가이드, 보조금", desc_en: "Startup guide, grants" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "ABN 등록", title_en: "Register ABN", desc_ko: "Australian Business Register에서 즉시 발급", desc_en: "Obtain instantly from Australian Business Register", duration_ko: "즉시", duration_en: "Instant", cost_ko: "무료", cost_en: "Free" },
+      { step: 2, title_ko: "사업명 등록 (해당 시)", title_en: "Register business name (if applicable)", desc_ko: "ASIC에서 사업명 등록 (개인 이름 외 사용 시)", desc_en: "Register with ASIC if using name other than personal", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "A$39/년", cost_en: "A$39/yr" },
+      { step: 3, title_ko: "법인 등록 (Pty Ltd)", title_en: "Register company (Pty Ltd)", desc_ko: "ASIC에서 ACN 발급 및 법인 등록", desc_en: "Obtain ACN and incorporate at ASIC", duration_ko: "1~3일", duration_en: "1-3 days", cost_ko: "A$538", cost_en: "A$538" },
+      { step: 4, title_ko: "GST 등록 (해당 시)", title_en: "Register for GST (if applicable)", desc_ko: "연 매출 A$75,000 초과 시 ATO에 GST 등록", desc_en: "Register with ATO if revenue >A$75,000", duration_ko: "1일", duration_en: "1 day" },
+      { step: 5, title_ko: "비즈니스 은행 계좌", title_en: "Open business bank account", desc_ko: "ANZ, CommBank, NAB 등에서 계좌 개설", desc_en: "Open account at ANZ, CommBank, NAB, etc.", duration_ko: "1~5일", duration_en: "1-5 days" },
+    ],
+    supportPrograms: [
+      { name_ko: "New Enterprise Incentive Scheme", name_en: "NEIS (New Enterprise Incentive Scheme)", desc_ko: "구직자 대상 창업 교육 + 수당 지급", desc_en: "Startup training + income support for job seekers", amount_ko: "최대 39주 수당", amount_en: "Up to 39 weeks allowance" },
+      { name_ko: "R&D Tax Incentive", name_en: "R&D Tax Incentive", desc_ko: "R&D 비용 세액 공제 (43.5%)", desc_en: "R&D expenditure tax offset (43.5%)", amount_ko: "R&D 비용의 43.5%", amount_en: "43.5% of R&D costs" },
+      { name_ko: "Export Market Development Grant", name_en: "EMDG (Export Market Development Grant)", desc_ko: "해외 시장 진출 마케팅 비용 보조", desc_en: "Reimbursement for export marketing costs", amount_ko: "최대 A$150,000", amount_en: "Up to A$150,000" },
+    ],
+    tips_ko: [
+      "ABN(사업자번호)은 온라인으로 즉시 무료 발급 가능합니다",
+      "GST는 연 매출 A$75,000 이상부터 등록 의무이며, 세율은 10%입니다",
+      "직원 고용 시 Superannuation(퇴직연금, 현재 11.5%)을 반드시 납부해야 합니다",
+      "호주는 BAS(Business Activity Statement)를 분기별로 제출해야 합니다",
+    ],
+    tips_en: [
+      "ABN can be obtained online instantly for free",
+      "GST registration required above A$75,000 annual revenue, rate is 10%",
+      "Employers must pay Superannuation (currently 11.5%) for all employees",
+      "BAS (Business Activity Statement) must be lodged quarterly",
+    ],
+    warningForForeigners_ko: "외국인은 유효한 비자(서브클래스 188/132 등 비즈니스 비자)가 필요합니다. 임시 비자 소지자도 ABN 취득은 가능하나, 비자 조건에 따라 사업 활동이 제한될 수 있습니다.",
+    warningForForeigners_en: "Foreigners need a valid visa (Subclass 188/132 business visa). Temporary visa holders can get an ABN, but business activities may be restricted by visa conditions.",
     aiPromptContext: `호주 창업 전문가로서 답변해. Sole Trader/Pty Ltd/Partnership 구분, ABN/ACN 등록, BAS(Business Activity Statement), GST(10%), 법인세(25%), Superannuation(퇴직연금)을 안내해. 비용은 호주 달러(A$)로 표시.`,
     loadingTips_ko: ["💡 호주 ABN(사업자번호)은 온라인으로 즉시 발급 가능해요", "💡 GST는 연 매출 A$75,000 이상부터 등록 필요해요", "💡 호주 Pty Ltd는 법인세 25%로 비교적 낮아요"],
     loadingTips_en: ["💡 Australian ABN can be obtained online instantly", "💡 GST registration required over A$75,000 annual revenue", "💡 Australian Pty Ltd has relatively low 25% corporate tax"],
@@ -805,6 +1116,32 @@ export const countryStartupData: Record<string, CountryStartupInfo> = {
       { name_ko: "BDC", name_en: "Business Development Bank of Canada", url: "https://www.bdc.ca", desc_ko: "창업 대출, 멘토링", desc_en: "Startup loans, mentoring" },
       { name_ko: "Corporations Canada", name_en: "Corporations Canada", url: "https://www.ic.gc.ca/eic/site/cd-dgc.nsf/eng/home", desc_ko: "연방 법인 설립", desc_en: "Federal incorporation" },
     ],
+    registrationSteps: [
+      { step: 1, title_ko: "사업 형태 결정", title_en: "Choose business structure", desc_ko: "개인사업자/법인/파트너십 중 선택", desc_en: "Choose Sole Proprietorship/Corporation/Partnership", duration_ko: "1일", duration_en: "1 day" },
+      { step: 2, title_ko: "사업명 등록", title_en: "Register business name", desc_ko: "주정부에 사업명 등록 (법인명 검색·예약)", desc_en: "Register name with provincial government", duration_ko: "1~5일", duration_en: "1-5 days", cost_ko: "C$60~200", cost_en: "C$60-200" },
+      { step: 3, title_ko: "법인 설립 (해당 시)", title_en: "Incorporate (if applicable)", desc_ko: "연방 또는 주정부에 법인 설립 신청", desc_en: "Apply for incorporation federally or provincially", duration_ko: "1~5일", duration_en: "1-5 days", cost_ko: "C$200~500", cost_en: "C$200-500" },
+      { step: 4, title_ko: "BN 등록 및 세금 계정", title_en: "Register BN & tax accounts", desc_ko: "CRA에서 Business Number + GST/HST/급여 계정 등록", desc_en: "Register BN + GST/HST/payroll accounts at CRA", duration_ko: "1~5일", duration_en: "1-5 days", cost_ko: "무료", cost_en: "Free" },
+      { step: 5, title_ko: "비즈니스 은행 계좌", title_en: "Open business bank account", desc_ko: "RBC, TD, BMO 등에서 법인 계좌 개설", desc_en: "Open account at RBC, TD, BMO, etc.", duration_ko: "1~3일", duration_en: "1-3 days" },
+    ],
+    supportPrograms: [
+      { name_ko: "Canada Small Business Financing", name_en: "CSBFP (Canada Small Business Financing)", desc_ko: "정부 보증 소기업 대출", desc_en: "Government-guaranteed small business loan", amount_ko: "최대 C$1,150,000", amount_en: "Up to C$1,150,000" },
+      { name_ko: "SR&ED 세액공제", name_en: "SR&ED Tax Incentive", desc_ko: "R&D 비용의 최대 35% 환급", desc_en: "Up to 35% refund on R&D expenditures", amount_ko: "R&D 비용의 35%", amount_en: "35% of R&D costs" },
+      { name_ko: "BDC 창업 대출", name_en: "BDC Startup Loans", desc_ko: "캐나다 사업개발은행 저금리 대출", desc_en: "Low-interest loans from Business Development Bank", amount_ko: "C$100K~", amount_en: "C$100K+", url: "https://www.bdc.ca" },
+    ],
+    tips_ko: [
+      "소규모 법인(CCPC)은 첫 C$500K 소득에 9% 세율이 적용됩니다 (SBD)",
+      "GST/HST는 연 매출 C$30,000 이상부터 등록 의무입니다",
+      "SR&ED 세액공제로 R&D 비용의 최대 35%까지 환급 가능합니다",
+      "온타리오/BC/앨버타 등 주마다 법인세율과 규정이 다릅니다",
+    ],
+    tips_en: [
+      "Canadian-Controlled Private Corp (CCPC) gets 9% tax on first C$500K income (SBD)",
+      "GST/HST registration required above C$30,000 annual revenue",
+      "SR&ED tax credit refunds up to 35% of R&D costs",
+      "Tax rates and regulations vary by province (Ontario/BC/Alberta, etc.)",
+    ],
+    warningForForeigners_ko: "비거주자도 캐나다에서 법인 설립 가능하나, 연방 법인은 25% 이상의 이사가 캐나다 거주자여야 합니다 (주별 상이). 취업 비자 없이 원격 운영 가능하나, 캐나다 소득에 대해 세금 신고 의무가 있습니다.",
+    warningForForeigners_en: "Non-residents can incorporate in Canada, but federal corporations need 25%+ Canadian resident directors (varies by province). Remote operation is possible without a work visa, but Canadian-sourced income must be reported.",
     aiPromptContext: `캐나다 창업 전문가로서 답변해. Sole Proprietorship/Corporation/Partnership 구분, BN(Business Number) 등록, GST/HST, 연방 vs 주 법인 설립, SBD(Small Business Deduction), SR&ED 세액공제를 안내해. 비용은 캐나다 달러(C$)로 표시.`,
     loadingTips_ko: ["💡 캐나다 소규모 법인은 첫 $500K 소득에 9% 세율이에요", "💡 GST/HST는 연 매출 C$30,000 이상부터 등록해요", "💡 SR&ED 세액공제로 R&D 비용의 35%까지 환급 가능해요"],
     loadingTips_en: ["💡 Canadian small business gets 9% tax on first $500K", "💡 GST/HST registration required over C$30,000 revenue", "💡 SR&ED credit refunds up to 35% of R&D costs"],

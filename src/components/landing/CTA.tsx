@@ -14,7 +14,7 @@ export default function CTA() {
   const { t } = useLocale();
 
   return (
-    <section className="relative py-24 md:py-32">
+    <section className="relative py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           {...fadeUp}

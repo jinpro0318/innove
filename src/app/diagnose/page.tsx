@@ -110,26 +110,48 @@ export default function DiagnosePage() {
     return { options: q.options.map((o) => ({ value: o.value, label: isEn ? o.label_en : o.label_ko, icon: o.icon })), layout: "buttons" };
   }
 
+  // --- Diagnosis history ---
+  const [historyItems, setHistoryItems] = useState<{ id: string; summary: string; date: string }[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  useEffect(() => {
+    const items: { id: string; summary: string; date: string }[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith("roadmap_")) {
+        try {
+          const data = JSON.parse(localStorage.getItem(key) ?? "");
+          if (data.summary && data.id) {
+            items.push({ id: data.id, summary: data.summary, date: data.createdAt ?? "" });
+          }
+        } catch { /* skip */ }
+      }
+    }
+    // Sort by date desc, limit to 10
+    items.sort((a, b) => (b.date > a.date ? 1 : -1));
+    setHistoryItems(items.slice(0, 10));
+  }, []);
+
   // --- loading ---
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6">
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md text-center">
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} className="mx-auto mb-6 text-5xl w-fit">✨</motion.div>
-          <h2 className="text-xl font-bold">{t("diagnose.loading")}</h2>
+          <h2 className="text-xl font-bold text-zinc-100">{t("diagnose.loading")}</h2>
           <div className="mx-auto mt-8 max-w-xs">
-            <div className="h-2 w-full overflow-hidden rounded-full bg-white/5"><motion.div className="h-full rounded-full bg-gradient-to-r from-primary to-accent" style={{ width: `${loadingPct}%` }} /></div>
-            <p className="mt-2 text-sm text-gray-400">{loadingPct}%</p>
+            <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-800"><motion.div className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-500" style={{ width: `${loadingPct}%` }} /></div>
+            <p className="mt-2 text-sm text-zinc-400">{loadingPct}%</p>
           </div>
           {!loadingError && (
             <AnimatePresence mode="wait">
-              <motion.p key={tipIndex} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }} className="mt-8 text-sm text-gray-500">{tips[tipIndex]}</motion.p>
+              <motion.p key={tipIndex} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }} className="mt-8 text-sm text-zinc-500">{tips[tipIndex]}</motion.p>
             </AnimatePresence>
           )}
           {loadingError && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-8">
               <p className="text-sm text-red-400">{loadingError}</p>
-              <button onClick={() => { setIsLoading(false); setCurrentStep(TOTAL_STEPS - 1); setShowOptions(true); setChatHistory((h) => { const c = [...h]; if (c.length && c[c.length - 1].role === "user") c.pop(); return c; }); }} className="mt-4 rounded-xl border border-white/10 px-6 py-2 text-sm text-gray-300 transition-colors duration-200 hover:bg-white/5">{t("diagnose.back")}</button>
+              <button onClick={() => { setIsLoading(false); setCurrentStep(TOTAL_STEPS - 1); setShowOptions(true); setChatHistory((h) => { const c = [...h]; if (c.length && c[c.length - 1].role === "user") c.pop(); return c; }); }} className="mt-4 rounded-xl border border-zinc-600 px-6 py-2 text-sm text-zinc-300 transition-colors duration-200 hover:bg-zinc-800/60">{t("diagnose.back")}</button>
             </motion.div>
           )}
         </motion.div>
@@ -140,17 +162,53 @@ export default function DiagnosePage() {
   // --- chat ---
   const opts = getCurrentOptions();
   return (
-    <div className="flex min-h-screen flex-col bg-[#0A0A0F]">
-      <div className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0A0A0F]/90 backdrop-blur-xl px-4 py-3 sm:px-6">
+    <div className="flex min-h-screen flex-col bg-[#09090B]">
+      <div className="sticky top-0 z-40 border-b border-zinc-700/50 bg-[#09090B]/90 backdrop-blur-xl px-4 py-3 sm:px-6">
         <div className="mx-auto flex max-w-2xl items-center gap-3">
           {currentStep > 0 ? (
-            <button onClick={handleBack} className="flex h-8 w-8 items-center justify-center rounded-xl text-gray-400 transition-colors duration-200 hover:bg-white/5 hover:text-white"><ArrowLeft size={18} /></button>
+            <button onClick={handleBack} className="flex h-8 w-8 items-center justify-center rounded-xl text-zinc-400 transition-colors duration-200 hover:bg-zinc-800/60 hover:text-white"><ArrowLeft size={18} /></button>
           ) : (
-            <Link href="/" className="flex h-8 w-8 items-center justify-center rounded-xl text-gray-400 transition-colors duration-200 hover:bg-white/5 hover:text-white"><ArrowLeft size={18} /></Link>
+            <Link href="/" className="flex h-8 w-8 items-center justify-center rounded-xl text-zinc-400 transition-colors duration-200 hover:bg-zinc-800/60 hover:text-white"><ArrowLeft size={18} /></Link>
           )}
           <div className="flex-1"><ProgressBar current={Math.min(currentStep, TOTAL_STEPS)} total={TOTAL_STEPS} /></div>
+          {historyItems.length > 0 && (
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-xs text-zinc-500 hover:text-violet-400 transition-colors"
+            >
+              {locale === "en" ? "History" : "이전 결과"}
+            </button>
+          )}
         </div>
       </div>
+
+      {/* History panel */}
+      <AnimatePresence>
+        {showHistory && historyItems.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden border-b border-zinc-700/50 bg-zinc-800/30"
+          >
+            <div className="mx-auto max-w-2xl px-4 py-3 sm:px-6">
+              <p className="text-xs text-zinc-500 mb-2">{locale === "en" ? "Previous diagnoses" : "이전 진단 결과"}</p>
+              <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                {historyItems.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/result?id=${item.id}`}
+                    className="block rounded-lg bg-zinc-800/60 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-700/50 transition-colors truncate"
+                  >
+                    {item.summary}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-2xl px-4 py-6 sm:px-6">
           <div className="space-y-4">
